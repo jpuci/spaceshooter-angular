@@ -3,4 +3,5 @@ export interface Bullet {
   left: number;
   width: number;
   height: number;
+  index: number;
 }
