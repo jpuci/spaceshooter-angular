@@ -33,6 +33,7 @@ export class GameComponent implements OnInit {
   bullets: Bullet[] = [];
   nextBullet = 0;
   nextRock = 0;
+  rockIntervalIds: any[] = [];
 
 
   constructor() {}
@@ -149,6 +150,8 @@ export class GameComponent implements OnInit {
       }
     }, 2000);
 
+    this.rockIntervalIds.push(generateRocks)
+
     let moveRocks = setInterval(() => {
       // let rocks = document.querySelectorAll<HTMLElement>(".rocks");
       if (this.rocksLeftTop.length !== 0) {
@@ -161,7 +164,22 @@ export class GameComponent implements OnInit {
 
           if (rockTop >= document.getElementById("jet")!.offsetTop - 40) {
             clearInterval(moveRocks);
+            this.rockIntervalIds.forEach(id => clearInterval(id));
+            this.rockIntervalIds = []
             this.start=false;
+            let username = localStorage.getItem('username');
+            let leaderboard : any[]= JSON.parse(localStorage.getItem('leaderboard')!);
+            if (leaderboard === null){
+              leaderboard = []
+            }
+            if (username !== null){
+              leaderboard.push(
+                {username: username, score: parseInt(document.getElementById("points")!.innerHTML)})
+            } else {
+              leaderboard.push({username:'Noname', score: parseInt(document.getElementById("points")!.innerHTML)})
+            }
+            localStorage.setItem('leaderboard', JSON.stringify(leaderboard))
+            console.log(leaderboard);
           }
 
           this.rocksLeftTop[i].top =   rockTop + 25;
@@ -169,7 +187,8 @@ export class GameComponent implements OnInit {
           // this.rocks[i] = rock;
         }
       }
-    }, 4500);
+    }, 450);
+
   }
 }
 

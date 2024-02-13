@@ -4,6 +4,8 @@ import {MainPageComponent} from "./components/main-page/main-page.component";
 import {GameComponent} from "./components/game/game.component";
 import {MapSelectorComponent} from "./components/map-selector/map-selector.component";
 import {LeaderboardComponent} from "./components/leaderboard/leaderboard.component";
+import {LoginComponent} from "./components/login/login.component";
+import {RegisterComponent} from "./components/register/register.component";
 
 const routes: Routes = [
   {
@@ -26,6 +28,14 @@ const routes: Routes = [
   {
     path: 'leaderboard',
     component: LeaderboardComponent
+  },
+  {
+    path: 'login',
+    component: LoginComponent
+  },
+  {
+    path: 'register',
+    component: RegisterComponent
   }
 ];
 

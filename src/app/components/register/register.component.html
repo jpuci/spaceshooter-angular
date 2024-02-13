@@ -1,0 +1,13 @@
+<div class="container">
+  <h2> Rejestracja </h2>
+  <form class="text-center p-5">
+    <input type="text" id="defaultLoginFormUsername" class="form-control mb-4" [(ngModel)]="username" placeholder="Nazwa użytkownika" name="username">
+    <!-- Password -->
+    <input type="password" id="defaultLoginFormPassword" class="form-control mb-4" [(ngModel)]="password" placeholder="Hasło" name="password">
+    <div class="d-flex justify-content-around">
+      <p class="error-message" *ngIf="isIncorrect"> Użytkownik o podanej nazwie już istnieje!</p>
+    </div>
+    <button class="btn btn-primary"  type="submit" (click)="onSubmit()">Zarejestruj</button>
+  </form>
+  <!--<router-outlet></router-outlet>-->
+</div>
