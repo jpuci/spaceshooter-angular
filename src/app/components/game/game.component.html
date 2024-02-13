@@ -1,0 +1,35 @@
+<body>
+
+<div *ngIf="!this.start" class="align-content-center justify-content-center">
+<!--  <button type="button" class="btn btn primary" (click)="onStart()">-->
+<!--    Press to start!-->
+<!--  </button>-->
+  <button type="button" (click)="onStart()" class="btn btn-primary">Press to start!</button>
+<!--  <div class="row">-->
+<!--    <div>-->
+
+<!--    </div>-->
+<!--  </div>-->
+
+</div>
+<div *ngIf="this.start" class="container">
+
+  <div class="row">
+    <div id="board" class="col-10">
+      <div id="points"> 0</div>
+
+        <ng-container *ngFor="let rock of rocksLeftTop; index as i">
+          <div class="rocks" [style.left]="rock.left" [style.top]="rock.top + 'px'" id="{{'rock' + i}}"></div>
+        </ng-container>
+
+      <ng-container *ngFor="let bullet of bullets; index as i">
+        <div class="bullets" [style.bottom]="bullet.bottom + 'px'" [style.left]="bullet.left + 'px'" id="{{'bullet' + i}}"></div>
+      </ng-container>
+
+      <div id="jet"></div>
+    </div>
+
+  </div>
+
+</div>
+</body>
