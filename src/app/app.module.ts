@@ -10,6 +10,10 @@ import { LeaderboardComponent } from './components/leaderboard/leaderboard.compo
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import {FormsModule} from "@angular/forms";
+import { SettingsComponent } from './components/settings/settings.component';
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatIconModule} from "@angular/material/icon";
+import { DifficultyLevelComponent } from './components/settings/difficulty-level/difficulty-level.component';
 
 @NgModule({
   declarations: [
@@ -19,12 +23,16 @@ import {FormsModule} from "@angular/forms";
     MapSelectorComponent,
     LeaderboardComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    SettingsComponent,
+    DifficultyLevelComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    MatDialogModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]

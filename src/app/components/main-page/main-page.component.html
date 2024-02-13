@@ -1,8 +1,12 @@
 <body>
 <div class="top">
-<div id="top-buttons">
-  <button><i class="bi bi-gear"></i></button>
-</div>
+
+  <button (click)="openSettings()" id="top-button" >
+    <mat-icon>settings</mat-icon>
+  </button>
+<!--<div id="top-buttons">-->
+<!--  <button><i class="bi bi-gear"></i></button>-->
+<!--</div>-->
 <h2 *ngIf="username">
   {{username}}
 </h2>
