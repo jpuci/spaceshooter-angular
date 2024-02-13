@@ -7,6 +7,9 @@ import { MainPageComponent } from './components/main-page/main-page.component';
 import { GameComponent } from './components/game/game.component';
 import { MapSelectorComponent } from './components/map-selector/map-selector.component';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -14,11 +17,14 @@ import { LeaderboardComponent } from './components/leaderboard/leaderboard.compo
     MainPageComponent,
     GameComponent,
     MapSelectorComponent,
-    LeaderboardComponent
+    LeaderboardComponent,
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

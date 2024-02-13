@@ -1,7 +1,11 @@
 <body>
-
+<div class="top">
 <div id="top-buttons">
   <button><i class="bi bi-gear"></i></button>
+</div>
+<h2 *ngIf="username">
+  {{username}}
+</h2>
 </div>
 
 <div id="menu">
@@ -14,7 +18,7 @@
     <button routerLink="/">Sklep</button>
     <button routerLink="/">Wybór Mapy</button>
     <button routerLink="/">Wyjście</button>
-    <button routerLink="/">Logowanie</button>
+    <button routerLink="/login">Logowanie</button>
   </div>
 </div>
 
