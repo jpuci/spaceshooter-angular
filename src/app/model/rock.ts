@@ -1,4 +1,5 @@
 export interface Rock{
   left: string,
-  top: number
+  top: number,
+  index: number
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, ElementRef, Renderer2, HostListener} from '@angular/core';
+import {Component, OnInit, HostListener} from '@angular/core';
 import {Rock} from "../../model/rock";
 import {Bullet} from "../../model/bullet";
 
@@ -31,9 +31,11 @@ export class GameComponent implements OnInit {
   rocks: any[] = [];
   rocksLeftTop: Rock[] = [];
   bullets: Bullet[] = [];
+  nextBullet = 0;
+  nextRock = 0;
 
 
-  constructor(private el: ElementRef, private renderer: Renderer2) {}
+  constructor() {}
 
   ngOnInit(): void {
     this.jet = document.getElementById("jet");
@@ -57,7 +59,6 @@ export class GameComponent implements OnInit {
     }  else if (event.key == "ArrowRight" && left <= (document.getElementById("board")!.clientLeft +
       document.getElementById("board")!.clientWidth - document.getElementById("jet")!.clientWidth)) {
     this.jet.style.left = left + 10 + "px";
-      console.log(this.jet.getBoundingClientRect())
   }
 
 
@@ -65,19 +66,22 @@ export class GameComponent implements OnInit {
 
     this.jet = document.getElementById("jet");
     let bul = {bottom: 60, left: document.getElementById("jet")!.clientLeft
-      , width: 20, height: 20};
-    let index = this.bullets.length;
+      , width: 20, height: 20, index: this.nextBullet};
+    let index = this.nextBullet;
+    this.nextBullet += 1;
     this.bullets.push(bul);
 
 
 
     let moveBullet = setInterval(() => {
       // let rocks = document.getElementsByClassName("rocks");
-      for (let i = 0; i < this.rocksLeftTop.length; i++) {
-        let rock = this.rocks[i];
-        if (rock != undefined) {
-          let rockbound = document.getElementById("rock" + i)!.getBoundingClientRect();
+      for (let rock of this.rocksLeftTop) {
+        let i = this.rocksLeftTop.findIndex(d => d.index === rock.index);
+        let rock2 = this.rocksLeftTop[i];
+        if (rock2 != undefined) {
+          let rockbound = document.getElementById("rock" + rock.index)!.getBoundingClientRect();
           let bulletbound = document.getElementById("bullet" + index)!.getBoundingClientRect();
+
           //Condition to check whether the rock/alien and the bullet are at the same position..!
           //If so,then we have to destroy that rock
 
@@ -87,32 +91,36 @@ export class GameComponent implements OnInit {
             bulletbound.top <= rockbound.top &&
             bulletbound.bottom <= rockbound.bottom
           ) {
-            //@ts-ignore
-            // rock.parentElement.removeChild(rock); //Just removing that particular rock;
-            this.rocks.splice(i, 1)
+
+            // this.rocks.splice(i, 1)
             this.rocksLeftTop.splice(i, 1)
-            //@ts-ignore
-            // bullet.parentElement.removeChild(bullet);
-            // const indexOfObject = this.bullets.findIndex((object) => {
-            //   return object.bottom === bul.bottom;
-            // });
-            this.bullets.splice(index, 1)
+
+            let idx = this.bullets.findIndex(d => d.index === index);
+            this.bullets.splice(idx, 1);
+            clearInterval(moveBullet);
             //Scoreboard
             document.getElementById("points")!.innerHTML =
               (parseInt(document.getElementById("points")!.innerHTML) + 1).toString();
           }
         }
       }
+      let bulletbound = document.getElementById("bullet" + index)!.getBoundingClientRect();
+      let bullettop = bulletbound.top;
       let bulletbottom = bul.bottom;
 
       //Stops the bullet from moving outside the gamebox
-      if (bulletbottom <= document.getElementById("board")!.clientTop) {
+      if (bullettop <= document.getElementById("board")!.clientTop) {
+        clearInterval(moveBullet);
+        let idx = this.bullets.findIndex(d => d.index === index);
+        this.bullets.splice(idx, 1);
+      }
+
+      if (!this.start){
         clearInterval(moveBullet);
       }
 
       bul.left = left; //bullet should always be placed at the top of my jet..!
       bul.bottom = bulletbottom + 3;
-      console.log(bul);
     });
   }
   }
@@ -128,39 +136,40 @@ export class GameComponent implements OnInit {
       rock.classList.add("rocks");
       // this.rocks.add(rock)
       //Just getting the left of the rock to place it in random position...
-      let rockLeft = parseInt(
-        window.getComputedStyle(rock).getPropertyValue("left")
-      );
       //generate value between 0 to 450 where 450 => board width - rock width
-      rock.style.left = Math.floor(Math.random() * (document.getElementById("board")!.clientWidth - document.documentElement.clientHeight*0.09)) + "px";
+      rock.style.left = Math.floor(Math.random() * (document.getElementById("board")!.clientWidth - document.getElementById("board")!.clientHeight*0.09)) + "px";
       rock.style.top = "0px";
 
       // this.board.appendChild(rock);
-      this.rocks.push(rock);
-      this.rocksLeftTop.push({'left': rock.style.left, 'top': 0})
+      // this.rocks.push(rock);
+      this.rocksLeftTop.push({'left': rock.style.left, 'top': 0, index: this.nextRock})
+      this.nextRock += 1;
+      if (!this.start){
+        clearInterval(generateRocks);
+      }
     }, 2000);
 
     let moveRocks = setInterval(() => {
       // let rocks = document.querySelectorAll<HTMLElement>(".rocks");
-      if (this.rocks.length !== 0) {
+      if (this.rocksLeftTop.length !== 0) {
 
-        for (let i = 0; i < this.rocks.length; i++) {
-          let rock : HTMLElement = this.rocks[i];
+        for (let i = 0; i < this.rocksLeftTop.length; i++) {
+          // let rock : HTMLElement = this.rocks[i];
 
           let rockTop =
             this.rocksLeftTop[i].top
 
-          if (rockTop >= 475) {
+          if (rockTop >= document.getElementById("jet")!.offsetTop - 40) {
             clearInterval(moveRocks);
             this.start=false;
           }
 
           this.rocksLeftTop[i].top =   rockTop + 25;
           // rock.style.top =
-          this.rocks[i] = rock;
+          // this.rocks[i] = rock;
         }
       }
-    }, 450);
+    }, 4500);
   }
 }
 

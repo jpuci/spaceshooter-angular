@@ -19,11 +19,11 @@
       <div id="points"> 0</div>
 
         <ng-container *ngFor="let rock of rocksLeftTop; index as i">
-          <div class="rocks" [style.left]="rock.left" [style.top]="rock.top + 'px'" id="{{'rock' + i}}"></div>
+          <div class="rocks" [style.left]="rock.left" [style.top]="rock.top + 'px'" id="{{'rock' + rock.index}}"></div>
         </ng-container>
 
       <ng-container *ngFor="let bullet of bullets; index as i">
-        <div class="bullets" [style.bottom]="bullet.bottom + 'px'" [style.left]="bullet.left + 'px'" id="{{'bullet' + i}}"></div>
+        <div class="bullets" [style.bottom]="bullet.bottom + 'px'" [style.left]="bullet.left + 'px'" id="{{'bullet' + bullet.index}}"></div>
       </ng-container>
 
       <div id="jet"></div>
