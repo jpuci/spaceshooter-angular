@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 
 @Component({
@@ -6,7 +6,7 @@ import {Router} from "@angular/router";
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
   username: string = '';
   password: string = '';
   errorMessage: string = '';
@@ -16,6 +16,14 @@ export class LoginComponent {
   constructor(private readonly router: Router){
 
   }
+
+  ngOnInit() {
+    if (localStorage.getItem('users') !== null) {
+      this.users = JSON.parse(localStorage.getItem('users')!)
+    }
+
+  }
+
   onSubmit(){
     console.log(this.users);
     console.log({user: this.username, password: this.password})
@@ -28,24 +36,6 @@ export class LoginComponent {
     } else {
       this.isIncorrect = true;
     }
-    // this.userService.login({
-    //   username: this.username,
-    //   password: this.password
-    // }).pipe(
-    //   catchError(error => {
-    //     this.isIncorrect = true;
-    //     console.log("login failed")
-    //     this.errorMessage = error.error
-    //     return of(null);
-    //
-    //   }),
-    //   tap((response: any) => {
-    //     if (response){
-    //       localStorage.setItem("username", this.username)
-    //       localStorage.setItem("jwtToken", response.accessToken);
-    //       this.router.navigate(['/menu']);
-    //     }
-    //   })).subscribe();
   }
 
   includesObject(list: any[], searchObject: { user: string, password: string}): boolean {
