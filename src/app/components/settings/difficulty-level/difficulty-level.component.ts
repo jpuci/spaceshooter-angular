@@ -7,4 +7,8 @@ import { Component } from '@angular/core';
 })
 export class DifficultyLevelComponent {
 
+  changeDifficultyLevel(value: string){
+    localStorage.setItem('diffLevel', value);
+  }
+
 }
