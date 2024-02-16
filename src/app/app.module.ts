@@ -14,6 +14,8 @@ import { SettingsComponent } from './components/settings/settings.component';
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatIconModule} from "@angular/material/icon";
 import { DifficultyLevelComponent } from './components/settings/difficulty-level/difficulty-level.component';
+import { ShopComponent } from './components/shop/shop.component';
+import { Rocket1Component } from './components/rocket1/rocket1.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import { DifficultyLevelComponent } from './components/settings/difficulty-level
     LoginComponent,
     RegisterComponent,
     SettingsComponent,
-    DifficultyLevelComponent
+    DifficultyLevelComponent,
+    ShopComponent,
+    Rocket1Component
   ],
   imports: [
     BrowserModule,

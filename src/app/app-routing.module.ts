@@ -6,7 +6,8 @@ import {MapSelectorComponent} from "./components/map-selector/map-selector.compo
 import {LeaderboardComponent} from "./components/leaderboard/leaderboard.component";
 import {LoginComponent} from "./components/login/login.component";
 import {RegisterComponent} from "./components/register/register.component";
-
+import {ShopComponent} from "./components/shop/shop.component";
+import {Rocket1Component} from "./components/rocket1/rocket1.component";
 const routes: Routes = [
   {
   path: 'menu',
@@ -32,6 +33,14 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent
+  },
+  {
+    path: 'shop',
+    component: ShopComponent
+  },
+  {
+    path: 'rocket1',
+    component: Rocket1Component
   },
   {
     path: 'register',
