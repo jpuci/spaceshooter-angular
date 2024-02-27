@@ -39,6 +39,8 @@ export class GameComponent implements OnInit {
   moveIntervalId: any;
   generateBulletIntervals: any[] = [];
   moveBulletIntervals: any[] = [];
+  rockWidth = 100;
+  rockHeight = 100;
 
 
   constructor() {
@@ -58,6 +60,8 @@ export class GameComponent implements OnInit {
 
       if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(ua)){
         this.isMobile = true;
+        this.rockWidth = 50;
+        this.rockHeight = 50;
       }
   }
 
@@ -146,7 +150,7 @@ export class GameComponent implements OnInit {
       this.jet = document.getElementById("jet");
       let rock = document.createElement("div");
       rock.classList.add("rocks");
-      rock.style.left = Math.floor(Math.random() * (document.getElementById("board")!.clientWidth - this.vw(10))) + "px";
+      rock.style.left = Math.floor(Math.random() * (document.getElementById("board")!.clientWidth - this.rockWidth - 10)) + "px";
       rock.style.top = "0px";
       this.rocksLeftTop.push({'left': rock.style.left, 'top': 0, index: this.nextRock})
       this.nextRock += 1;

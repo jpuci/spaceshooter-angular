@@ -24,7 +24,7 @@ body {
 
 #jet {
   position: absolute;
-  width: 8vh;
+  width: 8vw;
   height: 8vh;
   /*height: 40px;*/
   /*margin-left: auto;*/
@@ -35,6 +35,9 @@ body {
   /*display: flex;*/
   /*justify-content: center;*/
   bottom: 0;
+  object-fit: fill;
+  min-width: 50px;
+  min-height: 50px;
 }
 
 .bullets {
@@ -51,12 +54,13 @@ body {
 .rocks {
   position: absolute;
   top: 0;
-  width: 9vw;
-  height: 9vh;
+  //width: 100px;
+  //height: 100px;
   background: url("/assets/alien.png");
   background-size: contain;
   background-repeat: no-repeat;
-  min-width: 60px;
+  min-width: 50px;
+  min-height: 50px;
 }
 #points {
   position: absolute;

@@ -21,7 +21,7 @@
       <div id="points"> 0</div>
 
         <ng-container *ngFor="let rock of rocksLeftTop; index as i">
-          <div class="rocks" [style.left]="rock.left" [style.top]="rock.top + 'px'" id="{{'rock' + rock.index}}"></div>
+          <div class="rocks" [style.left]="rock.left" [style.top]="rock.top + 'px'" id="{{'rock' + rock.index}}" [style.width.px]="rockWidth"></div>
         </ng-container>
 
       <ng-container *ngFor="let bullet of bullets; index as i">
