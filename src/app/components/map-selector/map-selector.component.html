@@ -1,1 +1,12 @@
-<p>map-selector works!</p>
+<div class="container">
+  <h2>Wybór mapy</h2>
+  <div class="map-container">
+    <button (click)="navigateLeft()" class="icon-button">
+      <mat-icon class="arrow-icon">keyboard_arrow_left</mat-icon>
+    </button>
+    <img [src]="maps[selectedMapIndex]" alt="Mapa" class="map-image">
+    <button (click)="navigateRight()" class="icon-button">
+      <mat-icon class="arrow-icon">keyboard_arrow_right</mat-icon>
+    </button>
+  </div>
+</div>
