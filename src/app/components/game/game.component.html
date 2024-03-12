@@ -16,7 +16,71 @@
 
   <div class="row">
     <div id="board" class="col-10">
+      <div id="coins" style="position: absolute; top: 10px; left: 10px;">{{ coinsCount }}</div>
+
       <div id="points"> 0</div>
+      <div class="jet-life">
+
+        <ng-container *ngIf="playerLife === 6">
+          <i class="bi bi-heart-fill"></i>
+          <i class="bi bi-heart-fill"></i>
+          <i class="bi bi-heart-fill"></i>
+          <i class="bi bi-heart-fill"></i>
+          <i class="bi bi-heart-fill"></i>
+          <i class="bi bi-heart-fill"></i>
+        </ng-container>
+        <ng-container *ngIf="playerLife === 5">
+          <i class="bi bi-heart-fill"></i>
+          <i class="bi bi-heart-fill"></i>
+          <i class="bi bi-heart-fill"></i>
+          <i class="bi bi-heart-fill"></i>
+          <i class="bi bi-heart-fill"></i>
+          <i class="bi bi-heart"></i>
+        </ng-container>
+        <ng-container *ngIf="playerLife === 4">
+          <i class="bi bi-heart-fill"></i>
+          <i class="bi bi-heart-fill"></i>
+          <i class="bi bi-heart-fill"></i>
+          <i class="bi bi-heart-fill"></i>
+          <i class="bi bi-heart"></i>
+          <i class="bi bi-heart"></i>
+        </ng-container>
+
+        <ng-container *ngIf="playerLife >= 3">
+          <i class="bi bi-heart-fill"></i>
+          <i class="bi bi-heart-fill"></i>
+          <i class="bi bi-heart-fill"></i>
+          <i class="bi bi-heart"></i>
+          <i class="bi bi-heart"></i>
+          <i class="bi bi-heart"></i>
+
+        </ng-container>
+        <ng-container *ngIf="playerLife === 2">
+          <i class="bi bi-heart-fill"></i>
+          <i class="bi bi-heart-fill"></i>
+          <i class="bi bi-heart"></i>
+          <i class="bi bi-heart"></i>
+          <i class="bi bi-heart"></i>
+          <i class="bi bi-heart"></i>
+
+        </ng-container>
+        <ng-container *ngIf="playerLife === 1">
+          <i class="bi bi-heart-fill"></i>
+          <i class="bi bi-heart"></i>
+          <i class="bi bi-heart"></i>
+          <i class="bi bi-heart"></i>
+          <i class="bi bi-heart"></i>
+          <i class="bi bi-heart"></i>
+        </ng-container>
+        <ng-container *ngIf="playerLife === 0">
+          <i class="bi bi-heart"></i>
+          <i class="bi bi-heart"></i>
+          <i class="bi bi-heart"></i>
+          <i class="bi bi-heart"></i>
+          <i class="bi bi-heart"></i>
+          <i class="bi bi-heart"></i>
+        </ng-container>
+      </div>
 
         <ng-container *ngFor="let rock of rocksLeftTop; index as i">
           <div class="rocks" [style.left]="rock.left" [style.top]="rock.top + 'px'" id="{{'rock' + rock.index}}"></div>
@@ -24,6 +88,10 @@
 
       <ng-container *ngFor="let bullet of bullets; index as i">
         <div class="bullets" [style.bottom]="bullet.bottom + 'px'" [style.left]="bullet.left + 'px'" id="{{'bullet' + bullet.index}}"></div>
+      </ng-container>
+
+      <ng-container *ngFor="let coins of coins; index as i">
+        <div class="coins" [style.top]="coins.top + 'px'" [style.left]="coins.left + 'px'" ><i class="bi bi-coin"></i></div>
       </ng-container>
 
       <div id="jet"></div>
