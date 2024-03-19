@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {SettingsComponent} from "../settings/settings.component";
 import {MatDialog} from "@angular/material/dialog";
+import {GameService} from "../GameService";
 
 @Component({
   selector: 'app-main-page',
@@ -8,9 +9,11 @@ import {MatDialog} from "@angular/material/dialog";
   styleUrls: ['./main-page.component.scss']
 })
 export class MainPageComponent {
+  coins:number = 0;
   username = localStorage.getItem('username')
 
-  constructor(public dialog: MatDialog) {
+  constructor(public dialog: MatDialog,private playerService: GameService) {
+    this.coins = this.playerService.GetCoins();
   }
   openSettings(): void {
     this.dialog.open(SettingsComponent, {
@@ -22,4 +25,6 @@ export class MainPageComponent {
       // additional options as needed
     });
   }
+
+
 }

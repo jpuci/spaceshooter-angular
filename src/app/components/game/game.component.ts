@@ -1,8 +1,10 @@
 import {Component, OnInit, HostListener} from '@angular/core';
 import {Rock} from "../../model/rock";
 import {Bullet} from "../../model/bullet";
-import { GameService } from 'src/app/components/GameService';// Adjust the path accordingly
-import {Coins} from "../../model/coins";
+import { GameService } from 'src/app/components/GameService';
+import {Coin} from "../../model/coin";
+
+
 
 
 @Component({
@@ -32,46 +34,80 @@ export class GameComponent implements OnInit {
   start: boolean = false;
   damage: number = 0;
   movement: number = 0;
-  life: number = 0;
+  num_bullets:number = 0;
+  jetId: string = "";
 
   rocks: any[] = [];
+  coins: any[] = [];
   rocksLeftTop: Rock[] = [];
-  coinsLeftTop: Coins[] = [];
+  coinsLeftTop: Coin[] = [];
   bullets: Bullet[] = [];
-  coins: Coins[] = []; // Array to store coins
-  coinsCount:number = 0;
+  CollectedCoins: number = 0;
+
   nextBullet = 0;
   nextRock = 0;
   nextCoin: number = 0;
   rockIntervalIds: any[] = [];
-  coinInterval: any; // Interval for generating coins
+  coinInterval: any[] = []; // Interval for generating coins
+  bulletIntervalIds: any[] = [];
   playerLife: number = 3; // Initialize player life with 3
+  bulletInterval: any; // Deklaruj identyfikator interwału
+
+
 
 
   constructor(private playerService: GameService) {
+    this.jetId = this.playerService.GetID();
     this.damage = this.playerService.getDamage();
-    this.life = this.playerService.getLife();
-    this.movement = 30 + this.playerService.getMovement() * 10;
+    this.playerLife = this.playerService.getLife();
+    this.movement = 25*this.playerService.getMovement();
+    this.num_bullets = this.playerService.getBullets();
+    this.playerService.points = '';
+
   }
+
+  getFilterStyle(): string {
+    switch (this.jetId) {
+      case '1':
+        return '';
+      case '2':
+        return 'hue-rotate(120deg)';
+      case '3':
+        return 'hue-rotate(220deg)';
+      case '4':
+        return 'hue-rotate(320deg)';
+      default:
+        return '';
+    }
+    }
 
   ngOnInit(): void {
-
     this.jet = document.getElementById("jet");
     this.board = document.getElementById("board");
-    setInterval(() => {
-      this.shootBullet();
-    }, 500); // Adjust the interval as needed
+    this.clearIntervals();
+    this.onStart();
+
   }
+
+
+
 
 
   shootBullet() {
+    this.jet = document.getElementById("jet");
+    this.board = document.getElementById("board");
+    let left = parseInt(window.getComputedStyle(this.jet).getPropertyValue("left"));
 
-    let numberOfBullets = 1; // Adjust the number of bullets as needed
+
+
+
+    let numberOfBullets = this.num_bullets; // Adjust the number of bullets as needed
 
     for (let i = 0; i < numberOfBullets; i++) {
-      let left = parseInt(window.getComputedStyle(this.jet).getPropertyValue("left"));
+
+
       let bul = {
-        bottom: 90, left: document.getElementById("jet")!.clientLeft
+        bottom: 90, left:document.getElementById("jet")!.clientLeft
         , width: 20, height: 20, index: this.nextBullet
       };
 
@@ -90,7 +126,7 @@ export class GameComponent implements OnInit {
             let rockbound = document.getElementById("rock" + rock.index)!.getBoundingClientRect();
             let bulletbound = document.getElementById("bullet" + index)!.getBoundingClientRect();
 
-            //Condition to check whether the rock/alien and the bullet are at the same position..!
+            //Condition to check whether the rock/alien and the bullet are at the same position!
             //If so,then we have to destroy that rock
 
             if (
@@ -104,6 +140,7 @@ export class GameComponent implements OnInit {
               let idx = this.bullets.findIndex(d => d.index === index);
               this.bullets.splice(idx, 1);
               clearInterval(moveBullet);
+
               // Check if the life of the rock is greater than 0
               if (this.rocksLeftTop[i].life <= 0) {
                 this.rocksLeftTop.splice(i, 1);
@@ -127,57 +164,26 @@ export class GameComponent implements OnInit {
         }
 
 
-        if (!this.start) {
-          clearInterval(moveBullet);
-        }
-
-        bul.left = left + 24; //bullet should always be placed at the top of my jet..!
-        bul.bottom = bulletbottom + 3;
-
+         bul.left = left; //bullet should always be placed at the top of my jet!
+         bul.bottom = bulletbottom + 3;
         //double bullets
-        /* if (i === 0) {
-           bul.left -= 10; // Adjust the offset for the first bullet
+
+         if (i === 0) {
+           bul.left -= 20; // Adjust the offset for the first bullet
          } else {
-           bul.left += 10; // Adjust the offset for the second bullet
-         }*/
-      }, 10);
+           bul.left += 1; // Adjust the offset for the second bullet
+         }
+      });
+
+
     }
+
   }
 
-  moveCoins() {
-    // Move coins downwards
-    for (let i = 0; i < this.coins.length; i++) {
-      this.coins[i].top += 4; // Adjust the speed of the coins as needed
-      const coinElement = document.getElementById("coin" + i);
-      if (coinElement) {
-        coinElement.style.top = this.coins[i].top + 'px';
-      }
-
-      // Check for collision with the jet
-      const jetBound = this.jet.getBoundingClientRect();
-    //  let coinBound = document.getElementById("coin" + i)!.getBoundingClientRect();
-
-     const coinBound = coinElement?.getBoundingClientRect();
-
-      if (coinBound && jetBound) {
-        if (
-          coinBound.left <= jetBound.right &&
-          coinBound.right >= jetBound.left &&
-          coinBound.top <= jetBound.bottom &&
-          coinBound.bottom >= jetBound.top
-        ) {
-          // Collision detected, collect the coin
-          this.collectCoin(i);
-        }
-      }
-    }
-  }
-
-  collectCoin(index: number) {
+  collectCoin() {
     // Remove the collected coin from the array
-    this.coins.splice(index, 1);
-    this.playerService.coins +=1;
-    this.coinsCount +=1;
+    this.playerService.addCoin();
+    this.CollectedCoins +=1;
 
     // Perform any other actions related to collecting coins
     // For example, update the player's score
@@ -189,7 +195,7 @@ export class GameComponent implements OnInit {
     this.jet = document.getElementById("jet");
     this.board = document.getElementById("board");
     let left = parseInt(window.getComputedStyle(this.jet).getPropertyValue("left"));
-    let speed = this.movement; // ship speed
+    let speed = 20; // ship speed
 
     if (event.key == "ArrowLeft") {
       this.moveJetLeft(left, speed);
@@ -211,7 +217,7 @@ export class GameComponent implements OnInit {
   }
 
   animateJetMovement(startLeft: number, targetLeft: number) {
-    const duration = 200; // Adjust animation duration as needed
+    const duration = 125 - this.movement; // Adjust animation duration as needed
     const startTime = performance.now();
 
     const animate = (currentTime: number) => {
@@ -230,24 +236,33 @@ export class GameComponent implements OnInit {
   }
 
 
+  clearIntervals() {
 
+    clearInterval(this.bulletInterval);
+    this.rockIntervalIds.forEach(id => clearInterval(id));
+    this.rockIntervalIds = [];
+
+    this.coinInterval.forEach(id => clearInterval(id));
+    this.coinInterval = [];
+
+    this.bulletIntervalIds.forEach(id => clearInterval(id));
+    this.bulletIntervalIds = [];
+
+    this.bulletIntervalIds.forEach(id => clearInterval(id));
+    this.bulletIntervalIds = [];
+  }
 
   onStart() {
-
-
     this.start = true;
+    this.clearIntervals();
 
-    this.coinInterval = setInterval(() => {
-      // Generate coins and add them to the array
-      // Adjust the frequency and logic of coin generation as needed
-      const newCoin = { top: 0, left: Math.random() * (this.board.clientWidth - 20) }; // Adjust the left position as needed
-      this.coins.push(newCoin);
-    }, 2000);
+    this.bulletInterval = setInterval(() => {
+      this.shootBullet();
+    }, 400);
 
 
-    setInterval(() => {
-      this.moveCoins();
-    }, 50);
+
+
 
     let generateRocks = setInterval(() => {
       this.board = document.getElementById("board");
@@ -259,6 +274,7 @@ export class GameComponent implements OnInit {
       // this.rocks.add(rock)
       //Just getting the left of the rock to place it in random position...
       //generate value between 0 to 450 where 450 => board width - rock width
+
       rock.style.left = Math.floor(Math.random() * (document.getElementById("board")!.clientWidth - document.getElementById("board")!.clientHeight * 0.09)) + "px";
       rock.style.top = "0px";
 
@@ -286,8 +302,8 @@ export class GameComponent implements OnInit {
           let rockElement = document.getElementById("rock" + this.rocksLeftTop[i].index);
 
           if (rockTop >= document.getElementById("jet")!.offsetTop - 40 && rockElement) {
-            let jetBound = this.jet.getBoundingClientRect();
-            let rockBound = rockElement.getBoundingClientRect();
+            //let jetBound = this.jet.getBoundingClientRect();
+            //let rockBound = rockElement.getBoundingClientRect();
 
             this.rocksLeftTop.splice(i, 1);
             this.playerLife--;
@@ -309,7 +325,10 @@ export class GameComponent implements OnInit {
               }
               localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
               console.log(leaderboard);
-            }
+
+               this.playerService.points = document.getElementById("points")!.innerHTML;
+
+             }
 
           }
 
@@ -332,5 +351,74 @@ export class GameComponent implements OnInit {
     };
 
     let moveRocksInterval = setInterval(moveRocks, 5000); // Run the moveRocks function approximately every 1000 milliseconds
+
+    let generateCoins = setInterval(() => {
+      this.board = document.getElementById("board");
+      this.jet = document.getElementById("jet");
+      let coin = document.createElement("div");
+
+      coin.classList.add("coins");
+
+      // Just getting the left of the coin to place it in a random position...
+      // Generate a value between 0 and 450, where 450 is the board width minus the coin width
+      coin.style.left = Math.floor(Math.random() * (document.getElementById("board")!.clientWidth - document.getElementById("board")!.clientHeight * 0.09)) + "px";
+
+      coin.style.top = "0px";
+
+      this.coinsLeftTop.push({ 'left': coin.style.left, 'top': 0, index: this.nextCoin });
+      this.nextCoin += 1;
+
+      // Append the coin to the board
+     // this.board.appendChild(coin);
+
+      if (!this.start) {
+        clearInterval(generateCoins);
+      }
+    }, 5000);
+
+    this.coinInterval.push(generateCoins);
+
+    let moveCoins = () => {
+      if (this.coinsLeftTop.length !== 0) {
+        for (let i = 0; i < this.coinsLeftTop.length; i++) {
+          let coinTop = this.coinsLeftTop[i].top;
+          let coinElement = document.getElementById("coin" + this.coinsLeftTop[i].index);
+
+
+          if (coinElement ) {
+            let jetBound = this.jet.getBoundingClientRect();
+            let coinBound = coinElement.getBoundingClientRect();
+            if (
+              coinBound.left <= jetBound.right &&
+              coinBound.right >= jetBound.left &&
+              coinBound.top <= jetBound.bottom &&
+              coinBound.bottom >= jetBound.top
+            ) {
+              this.collectCoin();
+              this.coinsLeftTop.splice(i, 1);
+            }
+             if (coinTop >= document.getElementById("jet")!.offsetTop +20 && coinElement) {
+               this.coinsLeftTop.splice(i, 1);
+             }
+
+          }
+
+            // Stop the movement of coins that collide with the jet
+            clearInterval(moveCoinsInterval);
+        //  }
+
+          // Apply the same speed to all coins
+          this.coinsLeftTop[i].top += 0.5;
+          clearInterval(moveCoinsInterval);
+        }
+      }
+
+      // Request next animation frame
+      requestAnimationFrame(moveCoins);
+    };
+
+    let moveCoinsInterval = setInterval(moveCoins, 5000);
+
+
   }
 }

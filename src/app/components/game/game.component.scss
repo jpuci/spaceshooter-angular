@@ -64,12 +64,13 @@ body {
 .coins {
   position: absolute;
   top: 0px;
-  width: 9vh;
-  height: 9vh;
+  width: 3vh;
+  height: 3vh;
   background-color: transparent;
   color: white;
-  //background-size: contain;
-  //background-repeat: no-repeat;
+  background: url("/assets/coin.png");
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 /* Reduce opacity for rocks with reduced life */

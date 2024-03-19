@@ -2,17 +2,14 @@ import { Component } from '@angular/core';
 import { GameService } from 'src/app/components/GameService';
 
 @Component({
-  selector: 'app-rocket1',
-  templateUrl: './rocket1.component.html',
-  styleUrls: ['./rocket1.component.scss']
+  selector: 'app-rocket3',
+  templateUrl: './rocket3.component.html',
+  styleUrls: ['./rocket3.component.scss']
 })
-export class Rocket1Component {
+export class Rocket3Component {
 
   coins:number = 0;
-
-  constructor(private playerService: GameService) {
-    this.coins = this.playerService.GetCoins();
-  }
+  constructor(private playerService: GameService) { this.coins = this.playerService.GetCoins(); }
 
   ngOnInit(): void {
     this.getValues('damageProgress');
@@ -20,13 +17,13 @@ export class Rocket1Component {
   }
   increaseDamage(): void {
 
-    this.playerService.increaseDamage(1,'1'); // Increase damage by 1
+    this.playerService.increaseDamage(1,'3'); // Increase damage by 1
   }
 
 
   increaseSpeed(): void {
 
-    this.playerService.increaseSpeed(1,'1'); // Increase damage by 1
+    this.playerService.increaseSpeed(1,'3'); // Increase damage by 1
   }
 
   increaseProgress(progressBar: HTMLElement, increaseAmount: number): void {

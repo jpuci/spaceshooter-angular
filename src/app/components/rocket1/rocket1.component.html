@@ -6,6 +6,12 @@
 
 <h1 style="color: white;  text-align: center; font-size: 36px; margin: 10px">Sklep</h1>
 
+<div class="coin">
+  <div style="text-align: right; color: white; margin: 2vw;"><img src="assets/coin.png" style="width:2vw">{{ coins }}</div>
+</div>
+
+
+
 <div id="buttons">
   <button routerLink="/shop"><i class="bi bi-arrow-left"></i></button>
 </div>
@@ -19,6 +25,8 @@
   </div>
   <button id="zwinnosc" (click)="increaseValues('agilityProgress')"><i class="bi bi-plus-square-fill"></i></button>
 
+  <div style="color: white;font-size: 30px">10<img src="assets/coin.png" style="width:1vw;margin-left: 10px"></div>
+
 </div>
 
 
@@ -30,6 +38,8 @@
     <!-- Przycisk do zwiększania wartości -->
   </div>
   <button id="obrazenia" (click)="increaseValues('damageProgress')"><i class="bi bi-plus-square-fill"></i></button>
+  <div style="color: white;font-size: 30px">10<img src="assets/coin.png" style="width:1vw;margin-left: 10px"></div>
+
 </div>
 </div>
 

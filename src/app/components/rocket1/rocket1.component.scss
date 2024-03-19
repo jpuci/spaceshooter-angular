@@ -16,6 +16,15 @@
   max-height: 40%;
 }
 
+.coin{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: right;
+  align-items: center;
+  margin-top: -3vw
+
+}
+
 .progress-container {
   margin-bottom: 20px;
   display: flex;

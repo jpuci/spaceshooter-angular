@@ -1,22 +1,25 @@
 <body>
 
-<div *ngIf="!this.start" class="align-content-center justify-content-center">
+<!--<div *ngIf="!this.start" class="align-content-center justify-content-center">-->
 <!--  <button type="button" class="btn btn primary" (click)="onStart()">-->
 <!--    Press to start!-->
 <!--  </button>-->
-  <button type="button" (click)="onStart()" class="btn btn-primary">Press to start!</button>
+<!--  <button type="button" (click)="onStart()" class="btn btn-primary">Press to start!</button>-->
 <!--  <div class="row">-->
 <!--    <div>-->
 
 <!--    </div>-->
 <!--  </div>-->
 
-</div>
+<!--  </div>-->
 <div *ngIf="this.start" class="container">
 
   <div class="row">
     <div id="board" class="col-10">
-      <div id="coins" style="position: absolute; top: 10px; left: 10px;">{{ coinsCount }}</div>
+      <div id="coins" style="position: absolute; color: white; top: 30px; left: 10px;">
+        <img src="assets/coin.png" alt="Coin" style="width: 10px;"> {{ CollectedCoins }}
+      </div>
+
 
       <div id="points"> 0</div>
       <div class="jet-life">
@@ -46,7 +49,7 @@
           <i class="bi bi-heart"></i>
         </ng-container>
 
-        <ng-container *ngIf="playerLife >= 3">
+        <ng-container *ngIf="playerLife == 3">
           <i class="bi bi-heart-fill"></i>
           <i class="bi bi-heart-fill"></i>
           <i class="bi bi-heart-fill"></i>
@@ -90,14 +93,20 @@
         <div class="bullets" [style.bottom]="bullet.bottom + 'px'" [style.left]="bullet.left + 'px'" id="{{'bullet' + bullet.index}}"></div>
       </ng-container>
 
-      <ng-container *ngFor="let coins of coins; index as i">
-        <div class="coins" [style.top]="coins.top + 'px'" [style.left]="coins.left + 'px'" ><i class="bi bi-coin"></i></div>
+      <ng-container *ngFor="let coin of coinsLeftTop; index as i">
+        <div class="coins" [style.top]="coin.top + 'px'" [style.left]="coin.left" id="{{'coin' + coin.index}}"></div>
       </ng-container>
 
-      <div id="jet"></div>
+
+      <div id="jet" [style.filter]="getFilterStyle()"></div>
+
+
+
     </div>
 
   </div>
 
 </div>
+<app-defeat *ngIf="!start"></app-defeat>
+
 </body>
