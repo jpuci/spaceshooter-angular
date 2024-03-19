@@ -1,17 +1,87 @@
-.container {
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 75vh; /* Set the wrapper height to 75% of the viewport height */
+  margin-top: 5vw
+}
+
+.coin{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: right;
+  align-items: center;
+  margin-top: -5vw
+
+}
+
+.container1 {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
 }
+
+
+
+.button1 {
+  display: flex;
+}
+
+#buy-1 {
+
+  margin-left: 29vw; /* Margin adjusted for responsiveness */
+  margin-right: 10vw; /* Margin adjusted for responsiveness */
+}
+
+#buy-2 {
+
+  margin-left: -1vw; /* Margin adjusted for responsiveness */
+  margin-right: -1vw; /* Margin adjusted for responsiveness */
+}
+
+
+#buy-3 {
+
+  margin-left: 10vw; /* Margin adjusted for responsiveness */
+  margin-right: 10vw; /* Margin adjusted for responsiveness */
+}
+
+
+.buy-button {
+  width: 10vw; /* Width adjusted for responsiveness */
+  height: 2vw; /* Height adjusted for responsiveness */
+  background-color: #007bff;
+  border-radius: 3vw; /* Border radius adjusted for responsiveness */
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 5.5vw; /* Margin adjusted for responsiveness */
+  cursor: pointer;
+  margin-left: 10vw; /* Margin adjusted for responsiveness */
+}
+
+.buy-button span {
+  color: white;
+  display: flex;
+  font-size: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
 .button {
   justify-content: space-between;
   display: flex;
-  height: 170px;
-  margin: 10px 100px;
+  height: 30vh; /* Height adjusted for responsiveness */
+  width: 150vh;
+  margin: 2vh 2vw; /* Margin adjusted for responsiveness */
   border: none;
-  border-radius: 10px;
- overflow: hidden;
+  border-radius: 5vw; /* Border radius adjusted for responsiveness */
+  overflow: hidden;
 }
 
 .button img {
@@ -21,30 +91,30 @@
 }
 
 .button button {
-  margin: 10px;
-  width: 500px;
+  margin: 2vh 2vw; /* Margin adjusted for responsiveness */
+  width: 30vw; /* Width adjusted for responsiveness */
+  background-color: transparent;
 }
-
 
 #bottom-buttons {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   position: absolute;
-  bottom: 10px;
-  right: 10px;
+  bottom: 1vh; /* Bottom margin adjusted for responsiveness */
+  right: 0vw; /* Right margin adjusted for responsiveness */
 }
 
 #bottom-buttons button {
-  margin: 10px;
-  width: 50px; /* Adjust the width as needed */
-  padding: 10px;
-  font-size: 34px;
+  margin: 1vh 1vw; /* Margin adjusted for responsiveness */
+  width: 5vw; /* Width adjusted for responsiveness */
+  padding: 1vh 0vw; /* Padding adjusted for responsiveness */
+  font-size: 2vw; /* Font size adjusted for responsiveness */
   cursor: pointer;
   background-color: transparent;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 1vw; /* Border radius adjusted for responsiveness */
 }
 
 #bottom-buttons button:hover {
@@ -52,20 +122,31 @@
 }
 
 
-.top {
-  margin: 10px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-
 #top-button {
-  background-color: transparent;
-  border: none;
-  box-shadow: none;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: absolute;
+
 }
 
-mat-icon{
+#top-button button {
+  margin: 1vh -1vw; /* Margin adjusted for responsiveness */
+  width: 5vw; /* Width adjusted for responsiveness */
+  padding: 1vh 0vw; /* Padding adjusted for responsiveness */
+  font-size: 2vw; /* Font size adjusted for responsiveness */
+  cursor: pointer;
+  background-color: transparent;
+  color: white;
+  border: none;
+  border-radius: 1vw; /* Border radius adjusted for responsiveness */
+}
+
+#top-button button:hover {
+  background-color: transparent;
+}
+
+mat-icon {
   color: white;
 }

@@ -1,17 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Rocket1Component } from './rocket1.component';
+import { Rocket3Component } from './rocket3.component';
 
-
-describe('Rocket1Component', () => {
-  let component: Rocket1Component;
-  let fixture: ComponentFixture<Rocket1Component>;
+describe('Rocket3Component', () => {
+  let component: Rocket3Component;
+  let fixture: ComponentFixture<Rocket3Component>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [Rocket1Component]
+      declarations: [Rocket3Component]
     });
-    fixture = TestBed.createComponent(Rocket1Component);
+    fixture = TestBed.createComponent(Rocket3Component);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

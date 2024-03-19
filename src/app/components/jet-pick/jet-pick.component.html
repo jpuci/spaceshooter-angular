@@ -1,0 +1,41 @@
+<!--<div class="top">
+  <button (click)="openSettings()"*/ id="top-button" >
+    <mat-icon>settings</mat-icon>
+  </button>
+</div>-->
+
+<h1 style="color: white; text-align: center; font-size: 66px; margin: 100px 0 10px 0;">Wybierz statek</h1>
+
+<div id="top-button">
+  <button routerLink="/menu"><i class="bi bi-arrow-left"></i></button>
+</div>
+
+
+
+<div class="wrapper">
+
+
+  <div class="container">
+
+    <div class="button">
+
+      <button id="1" routerLink="/game" (click)="getID('1')"> <img src="assets/rocket.png"></button>
+      <button id="2" routerLink="/game" (click)="getID('2')"> <img src="assets/rocket.png" style="filter: hue-rotate(120deg)"></button>
+      <button id="3" routerLink="/game" (click)="getID('3')"> <img src="assets/rocket.png" style="filter: hue-rotate(220deg)"></button>
+      <button id="4" routerLink="/game" (click)="getID('4')"> <img src="assets/rocket.png" style="filter: hue-rotate(320deg)"></button>
+    </div>
+
+
+  </div>
+
+
+  <div id="bottom-buttons">
+    <button routerLink="/leaderboard"><i class="bi bi-trophy"></i></button>
+    <button><i class="bi bi-question-octagon"></i></button>
+  </div>
+</div>
+
+
+
+
+

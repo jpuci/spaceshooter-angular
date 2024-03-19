@@ -1,48 +1,33 @@
-<!--<div class="top">
-  <button (click)="openSettings()"*/ id="top-button" >
-    <mat-icon>settings</mat-icon>
-  </button>
-</div>-->
-<h1 style="color: white;  text-align: center; font-size: 36px; margin: 10px">Sklep</h1>
 
+<h1 style="color: white; text-align: center; font-size: 4vw; margin: 2vw 0 1vw 0;">Sklep</h1>
 
-
-<div class="container">
-
-  <div class="button">
-
-    <button id="1" routerLink="/rocket1" > <img src="assets/rocket.png"></button>
-    <button id="2" routerLink="/" > <img src="assets/rocket.png"></button>
-    <button id="3" routerLink="/" > <img src="assets/rocket.png"></button>
-    <button id="4" routerLink="/" > <img src="assets/rocket.png"></button>
-  </div>
-
-
-  <div class="button">
-   <button id="5" routerLink="/"> <img src="assets/rocket.png"></button>
-    <button id="6" routerLink="/"><img src="assets/rocket.png"></button>
-   <button id="7" routerLink="/"><img src="assets/rocket.png"></button>
-    <button id="8" routerLink="/"><img src="assets/rocket.png"></button>
-  </div>
-
-
-
-  <div class="button">
-    <button id="9" routerLink="/" ><img src="assets/rocket.png"></button>
-    <button id="10" routerLink="/" ><img src="assets/rocket.png"></button>
-    <button id="11" routerLink="/" ><img src="assets/rocket.png"></button>
-    <button id="12" routerLink="/" > <img src="assets/rocket.png"></button>
-  </div>
-
+<div class="coin">
+<div style="text-align: right; color: white; margin: 2vw;"><img src="assets/coin.png" style="width:2vw">{{ coins }}</div>
 </div>
 
+
+
+<div id="top-button">
+  <button routerLink="/menu"><i class="bi bi-arrow-left"></i></button>
+</div>
+
+<div class="wrapper">
+  <div class="container1">
+    <div class="button1">
+      <div class="buy-button" id="buy-1" (click)="buyRocket('2')"><span>Kup za: 100</span></div>
+      <div class="buy-button" id="buy-2" (click)="buyRocket('3')"><span>Kup za: 200</span></div>
+      <div class="buy-button" id="buy-3" (click)="buyRocket('4')"><span>Kup za: 300</span></div>
+    </div>
+  </div>
+  <div class="button">
+    <button id="1" routerLink="/rocket1" (click)="getID('1')"> <img src="assets/rocket.png"></button>
+    <button id="2" routerLink="/rocket2" (click)="getID('2')"> <img src="assets/rocket.png" style="filter: hue-rotate(120deg)"></button>
+    <button id="3" routerLink="/rocket3" (click)="getID('3')"> <img src="assets/rocket.png" style="filter: hue-rotate(220deg)"></button>
+    <button id="4" routerLink="/rocket4" (click)="getID('4')"> <img src="assets/rocket.png" style="filter: hue-rotate(320deg)"></button>
+  </div>
+</div>
 
 <div id="bottom-buttons">
   <button routerLink="/leaderboard"><i class="bi bi-trophy"></i></button>
   <button><i class="bi bi-question-octagon"></i></button>
 </div>
-
-
-
-
-

@@ -6,14 +6,26 @@
 
 <h1 style="color: white;  text-align: center; font-size: 36px; margin: 10px">Sklep</h1>
 
+<div class="coin">
+  <div style="text-align: right; color: white; margin: 2vw;"><img src="assets/coin.png" style="width:2vw">{{ coins }}</div>
+</div>
+
+
+
+<div id="buttons">
+  <button routerLink="/shop"><i class="bi bi-arrow-left"></i></button>
+</div>
+
 <div class="progress">
   <img src="assets/rocket.png" alt="Obrazek">
 <div class="progress-container">
   <span class="progress-label">Zwinność:</span>
   <div class="progress-bar">
-    <div id="agilityProgress" class="progress-value" style="width: 25%;"></div>
+    <div id="agilityProgress" class="progress-value" style="width: 0%;"></div>
   </div>
   <button id="zwinnosc" (click)="increaseValues('agilityProgress')"><i class="bi bi-plus-square-fill"></i></button>
+
+  <div style="color: white;font-size: 30px">10<img src="assets/coin.png" style="width:1vw;margin-left: 10px"></div>
 
 </div>
 
@@ -22,10 +34,12 @@
 <div class="progress-container">
   <span class="progress-label">Obrażenia:</span>
   <div class="progress-bar">
-    <div id="damageProgress" class="progress-value" style="width: 25%;"></div>
+    <div id="damageProgress" class="progress-value" style="width: 0%;"></div>
     <!-- Przycisk do zwiększania wartości -->
   </div>
   <button id="obrazenia" (click)="increaseValues('damageProgress')"><i class="bi bi-plus-square-fill"></i></button>
+  <div style="color: white;font-size: 30px">10<img src="assets/coin.png" style="width:1vw;margin-left: 10px"></div>
+
 </div>
 </div>
 
