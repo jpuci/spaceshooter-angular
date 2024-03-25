@@ -253,8 +253,8 @@ export class GameComponent implements OnInit {
   }
 
   onStart() {
+
     this.start = true;
-    this.clearIntervals();
 
     this.bulletInterval = setInterval(() => {
       this.shootBullet();
@@ -309,7 +309,7 @@ export class GameComponent implements OnInit {
             this.playerLife--;
 
             if (this.playerLife < 0) {
-
+              this.playerService.saveToLocalStorage();
               this.rockIntervalIds.forEach(id => clearInterval(id));
               this.rockIntervalIds = [];
               this.start = false;

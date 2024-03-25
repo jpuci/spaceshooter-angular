@@ -120,6 +120,29 @@ export class GameService {
   }
 
   // Method to convert service data into a JSON object
+  toJSON_start(): any {
+    return {
+      damage_1: 1,
+      damage_2: 1,
+      damage_3: 1,
+      damage_4: 1,
+      damage: 1,
+      life: 3,
+      speed_1: 1,
+      speed_2: 1,
+      speed_3: 1,
+      speed_4: 1,
+      speed: 1,
+      selectedJet: '1',
+      coins: 350,
+      bullets: 1,
+      points: '',
+      jet_2: 0,
+      jet_3: 0,
+      jet_4: 0,
+    };
+  }
+
   toJSON(): any {
     return {
       damage_1: this.damage_1,
@@ -161,7 +184,9 @@ export class GameService {
 
   // Method to clear data from localStorage
   clearLocalStorage(): void {
-    localStorage.removeItem('gameData');
+    const jsonData = JSON.stringify(this.toJSON_start());
+    localStorage.setItem('gameData', jsonData);
+    this.loadFromLocalStorage();
   }
 
 }

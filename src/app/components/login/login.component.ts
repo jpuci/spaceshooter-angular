@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
-
+import { GameService } from 'src/app/components/GameService';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -13,7 +13,7 @@ export class LoginComponent implements OnInit{
   users: any[] = [{user: "User1", password: "xyz"}, {user: "User2", password: "123"}];
   isIncorrect = false;
 
-  constructor(private readonly router: Router){
+  constructor(private readonly router: Router, private playerService: GameService){
 
   }
 
@@ -21,7 +21,6 @@ export class LoginComponent implements OnInit{
     if (localStorage.getItem('users') !== null) {
       this.users = JSON.parse(localStorage.getItem('users')!)
     }
-
   }
 
   onSubmit(){
@@ -32,6 +31,7 @@ export class LoginComponent implements OnInit{
       this.isIncorrect = false;
       localStorage.setItem("username", this.username)
       localStorage.setItem("password", this.password);
+      this.playerService.clearLocalStorage();
       this.router.navigate(['/menu']);
     } else {
       this.isIncorrect = true;
