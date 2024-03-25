@@ -10,7 +10,7 @@ export class ShopComponent {
   coins:number = 0;
   buttonIds1: string []= [];
 
-  constructor(private playerService: GameService) {
+  constructor(public playerService: GameService) {
     this.coins = this.playerService.GetCoins();
   }
 
@@ -43,19 +43,19 @@ export class ShopComponent {
     if(this.playerService.jet_2==1){
       this.buttonIds1 = ['buy-1'];
       this.enableButtonsById('2');
-      this.disableButtonsById(this.buttonIds1);
+      this.boughtButtonsById(this.buttonIds1);
     }
 
     if(this.playerService.jet_3==1){
       this.buttonIds1 = ['buy-2'];
       this.enableButtonsById('3');
-      this.disableButtonsById(this.buttonIds1);
+      this.boughtButtonsById(this.buttonIds1);
     }
 
     if(this.playerService.jet_4==1){
       this.buttonIds1 = ['buy-3'];
       this.enableButtonsById('4');
-      this.disableButtonsById(this.buttonIds1);
+      this.boughtButtonsById(this.buttonIds1);
     }
 
   }
@@ -98,6 +98,7 @@ export class ShopComponent {
     this.playerService.jet_4=1;
     this.ngOnInit();
   }
+  this.playerService.saveToLocalStorage();
 }
 
   enableButtonsById(id:string) {
@@ -115,6 +116,18 @@ export class ShopComponent {
       if (button) {
         button.disabled = true;
         button.style.backgroundColor = 'grey';
+
+      }
+    });
+  }
+
+  boughtButtonsById(buttonIds: string[]): void {
+    buttonIds.forEach((id) => {
+      const button = document.getElementById(id) as HTMLButtonElement | null;
+      if (button) {
+        button.disabled = true;
+        button.style.backgroundColor = 'green';
+
       }
     });
   }

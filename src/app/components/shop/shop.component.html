@@ -14,9 +14,15 @@
 <div class="wrapper">
   <div class="container1">
     <div class="button1">
-      <div class="buy-button" id="buy-1" (click)="buyRocket('2')"><span>Kup za: 100</span></div>
-      <div class="buy-button" id="buy-2" (click)="buyRocket('3')"><span>Kup za: 200</span></div>
-      <div class="buy-button" id="buy-3" (click)="buyRocket('4')"><span>Kup za: 300</span></div>
+      <div class="buy-button" id="buy-1" (click)="buyRocket('2')" [ngClass]="{ 'purchased': playerService.jet_2 === 1 }">
+        <span>{{ playerService.jet_2 === 1 ? 'Kupiono' : 'Kup za: 100' }}</span>
+      </div>
+      <div class="buy-button" id="buy-2" (click)="buyRocket('3')" [ngClass]="{ 'purchased': playerService.jet_3 === 1 }">
+        <span>{{ playerService.jet_3 === 1 ? 'Kupiono' : 'Kup za: 200' }}</span>
+      </div>
+      <div class="buy-button" id="buy-3" (click)="buyRocket('4')" [ngClass]="{ 'purchased': playerService.jet_4 === 1 }">
+        <span>{{ playerService.jet_4 === 1 ? 'Kupiono' : 'Kup za: 300' }}</span>
+      </div>
     </div>
   </div>
   <div class="button">

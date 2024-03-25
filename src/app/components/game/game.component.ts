@@ -164,7 +164,7 @@ export class GameComponent implements OnInit {
         }
 
 
-         bul.left = left; //bullet should always be placed at the top of my jet!
+         bul.left = left +33; //bullet should always be placed at the top of my jet!
          bul.bottom = bulletbottom + 3;
         //double bullets
 
