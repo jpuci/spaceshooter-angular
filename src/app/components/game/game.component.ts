@@ -1,29 +1,29 @@
-import {Component, OnInit, HostListener} from '@angular/core';
+import {Component, OnInit, HostListener, AfterViewInit} from '@angular/core';
 import {Rock} from "../../model/rock";
 import {Bullet} from "../../model/bullet";
+import {Router} from "@angular/router";
+
+// import webgazer from 'webgazer';
+
+// console.log(webgazer);
+// import * as webgazer from 'webgazer';
+// declare var webgazer: any;
+
+declare var webgazer: any;
 
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss']
 })
-// export class GameComponent {
-//
-// }
-//
-// // bullet.component.ts
-// import { Component, OnInit, Input, ElementRef, Renderer2 } from '@angular/core';
-//
-// @Component({
-//   selector: 'app-bullet',
-//   template: `<div class="bullets" [style.left.px]="left" [style.bottom.px]="bottom"></div>`,
-//   styles: []
-// })
 
 
-export class GameComponent implements OnInit {
+
+export class GameComponent implements OnInit, AfterViewInit {
   // @Input() left: number;
   // @Input() bottom: number;
+
+
   jet: any;
   board: any;
   start: boolean = false;
@@ -41,9 +41,11 @@ export class GameComponent implements OnInit {
   moveBulletIntervals: any[] = [];
   rockWidth = 100;
   rockHeight = 100;
+  endMessage=false;
+  score = -1;
 
 
-  constructor() {
+  constructor(private readonly router: Router) {
   }
 
   ngOnInit(): void {
@@ -65,11 +67,22 @@ export class GameComponent implements OnInit {
       }
   }
 
-
-  vw(percent: number): number {
-    let w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-    return (percent * w) / 100;
+  ngAfterViewInit(): void {
+    webgazer.begin().then(function() {
+      console.log("WebGazer has initialized.");
+    }).catch(function(error:any) {
+      console.error("Initialization error:", error);
+    });
+    // console.log(webgazer)
+    webgazer.setGazeListener((data:any, elapsedTime:any) => {
+      if (data == null) {
+        console.log('sad :(')
+        return;
+      }
+      console.log(data.x, data.y);
+    }).begin();
   }
+
 
   moveLeft() {
     this.jet = document.getElementById("jet");
@@ -136,13 +149,11 @@ export class GameComponent implements OnInit {
       this.generateBullet();
 
     }
-
-
   }
 
 
   onStart() {
-
+    this.score = 0;
 
     this.start = true;
     let generateRocks = setInterval(() => {
@@ -175,8 +186,10 @@ export class GameComponent implements OnInit {
             this.moveBulletIntervals.forEach(id => clearInterval(id));
             this.rockIntervalIds = []
             this.start = false;
+            this.endMessage = true;
             let username = localStorage.getItem('username');
             let leaderboard: any[] = JSON.parse(localStorage.getItem('leaderboard')!);
+            this.score = parseInt(document.getElementById("points")!.innerHTML);
             if (leaderboard === null) {
               leaderboard = []
             }
@@ -184,9 +197,16 @@ export class GameComponent implements OnInit {
               leaderboard.push(
                 {username: username, score: parseInt(document.getElementById("points")!.innerHTML)})
             } else {
-              leaderboard.push({username: 'Noname', score: parseInt(document.getElementById("points")!.innerHTML)})
+              leaderboard.push({username: 'Noname', score: this.score})
             }
             localStorage.setItem('leaderboard', JSON.stringify(leaderboard))
+            ;
+            console.log(this.score);
+            setTimeout(() =>
+              {
+                this.router.navigate(['/']);
+              },
+              3000);
           }
 
           this.rocksLeftTop[i].top = rockTop + 25;

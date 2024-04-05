@@ -10,6 +10,7 @@ body {
   align-content: center;
   align-items: center;
 }
+
 #board {
   position: relative;
   height: 70vh;
@@ -72,7 +73,7 @@ body {
   color: white;
 }
 
-mat-icon{
+.mat-icon1{
   color: white;
   transform: scale(5);
 }

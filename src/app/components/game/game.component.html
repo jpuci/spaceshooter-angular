@@ -1,6 +1,10 @@
-<body>
 
-<div *ngIf="!this.start" class="align-content-center justify-content-center">
+<body>
+<!--<div class="body">-->
+
+
+
+<div *ngIf="!this.start && this.score === -1" class="align-content-center justify-content-center">
 <!--  <button type="button" class="btn btn primary" (click)="onStart()">-->
 <!--    Press to start!-->
 <!--  </button>-->
@@ -12,6 +16,12 @@
 <!--  </div>-->
 
 </div>
+<div class="container" *ngIf="!this.start && this.score !== -1">
+  <h1 style="color: red"  class="col">GAME OVER</h1><br>
+
+  <h2 style="color: red"  class="col"> Score: {{score}}</h2>
+</div>
+
 <div *ngIf="this.start" class="container">
 
   <div class="row">
@@ -38,15 +48,16 @@
   <div class="row control-row" *ngIf="this.isMobile">
     <div class="col" >
       <button  class="arrow-button" (touchstart)="startAction('left')" (touchend)="stopAction()" (touchmove)="stopAction()">
-        <mat-icon>keyboard_arrow_left</mat-icon>
+        <mat-icon class="mat-icon1">keyboard_arrow_left</mat-icon>
       </button>
     </div>
     <div class="col">
       <button class="arrow-button" (touchstart)="startAction('right')" (touchend)="stopAction()" (touchmove)="stopAction()">
-        <mat-icon>keyboard_arrow_right</mat-icon>
+        <mat-icon class="mat-icon1">keyboard_arrow_right</mat-icon>
       </button>
     </div>
   </div>
 
 </div>
+<!--</div>-->
 </body>

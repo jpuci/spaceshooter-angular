@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import {AfterViewInit, Component } from '@angular/core';
 import {SettingsComponent} from "../settings/settings.component";
 import {MatDialog} from "@angular/material/dialog";
+declare var webgazer: any;
 
 @Component({
   selector: 'app-main-page',
@@ -22,4 +23,21 @@ export class MainPageComponent {
       // additional options as needed
     });
   }
+
+  // ngAfterViewInit(): void {
+  //   webgazer.begin().then(function() {
+  //     console.log("WebGazer has initialized.");
+  //   }).catch(function(error:any) {
+  //     console.error("Initialization error:", error);
+  //   });
+  //   // console.log(webgazer)
+  //   webgazer.setGazeListener((data:any, elapsedTime:any) => {
+  //     if (data == null) {
+  //       console.log('sad :(')
+  //       return;
+  //     }
+  //     console.log(data.x, data.y);
+  //   }).begin();
+  // }
+
 }
