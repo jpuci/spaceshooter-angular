@@ -3,6 +3,7 @@ import {Rock} from "../../model/rock";
 import {Bullet} from "../../model/bullet";
 import { GameService } from 'src/app/components/GameService';
 import {Coin} from "../../model/coin";
+import { MapSelectorService } from '../map-selector/map-serv.service';
 
 
 
@@ -43,6 +44,7 @@ export class GameComponent implements OnInit {
   coinsLeftTop: Coin[] = [];
   bullets: Bullet[] = [];
   CollectedCoins: number = 0;
+  maps: string[] = ['assets/map1.jpg', 'assets/map2.jepg', 'assets/map3.jpg'];
 
   nextBullet = 0;
   nextRock = 0;
@@ -53,10 +55,12 @@ export class GameComponent implements OnInit {
   playerLife: number = 3; // Initialize player life with 3
   bulletInterval: any; // Deklaruj identyfikator interwału
 
+  selectedMapPath: number = this.mapService.getMap();
 
 
 
-  constructor(private playerService: GameService) {
+  constructor(private playerService: GameService,
+              public  mapService: MapSelectorService) {
     this.jetId = this.playerService.GetID();
     this.damage = this.playerService.getDamage();
     this.playerLife = this.playerService.getLife();
@@ -86,6 +90,8 @@ export class GameComponent implements OnInit {
     this.board = document.getElementById("board");
     this.clearIntervals();
     this.onStart();
+
+    this.selectedMapPath = this.mapService.getMap();
 
   }
 
@@ -421,4 +427,6 @@ export class GameComponent implements OnInit {
 
 
   }
+
+  protected readonly MapSelectorService = MapSelectorService;
 }

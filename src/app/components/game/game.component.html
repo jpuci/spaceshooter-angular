@@ -15,7 +15,7 @@
 <div *ngIf="this.start" class="container">
 
   <div class="row">
-    <div id="board" class="col-10">
+    <div id="board" [style.background-image]="'url(' + maps[selectedMapPath] +')'" class="col-10">
       <div id="coins" style="position: absolute; color: white; top: 30px; left: 10px;">
         <img src="assets/coin.png" alt="Coin" style="width: 10px;"> {{ CollectedCoins }}
       </div>
