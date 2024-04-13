@@ -63,7 +63,7 @@ export class GameComponent implements OnInit, AfterViewInit {
     this.jetId = this.playerService.GetID();
     this.damage = this.playerService.getDamage();
     this.playerLife = this.playerService.getLife();
-    this.movement = 25*this.playerService.getMovement();
+    this.movement = 25 * this.playerService.getMovement();
     this.num_bullets = this.playerService.getBullets();
     this.playerService.points = '';
     }
@@ -99,29 +99,48 @@ export class GameComponent implements OnInit, AfterViewInit {
 
       let ua = navigator.userAgent;
 
-      if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(ua)){
-        this.isMobile = true;
-        this.rockWidth = 50;
-        this.rockHeight = 50;
-      }
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(ua)){
+      this.isMobile = true;
+      this.rockWidth = 50;
+      this.rockHeight = 50;
+    }
   }
 
   ngAfterViewInit(): void {
-    webgazer.begin().then(function() {
-      console.log("WebGazer has initialized.");
-    }).catch(function(error:any) {
-      console.error("Initialization error:", error);
-    });
+    // webgazer.begin().then(function() {
+    //   console.log("WebGazer has initialized.");
+    // }).catch(function(error:any) {
+    //   console.error("Initialization error:", error);
+    // });
     // console.log(webgazer)
-    webgazer.setGazeListener((data:any, elapsedTime:any) => {
-      if (data == null) {
-        console.log('sad :(')
-        return;
-      }
-      console.log(data.x, data.y);
-    }).begin();
+    // webgazer.setGazeListener((data:any, elapsedTime:any) => {
+    //   if (data == null) {
+    //     console.log('sad :(')
+    //     return;
+    //   }
+    //   console.log(data.x, data.y);
+    // }).begin();
   }
 
+
+  startAction(direction: string): void {
+    this.stopAction(); // Ensure no intervals are running already
+    this.moveIntervalId = window.setInterval(() => {
+      // The function you want to execute repeatedly
+      if (direction === 'left') {
+        this.moveJetLeft(-1, -1)
+      } else {
+        this.moveJetRight(-1, -1)
+      }
+    }, 10); // Adjust the interval as needed
+  }
+
+  stopAction(): void {
+    if (this.moveIntervalId !== undefined) {
+      clearInterval(this.moveIntervalId);
+      this.moveIntervalId = undefined;
+    }
+  }
 
 
 
@@ -238,15 +257,37 @@ export class GameComponent implements OnInit, AfterViewInit {
   }
 
   moveJetLeft(currentLeft: number, speed: number) {
-    const targetLeft = Math.max(currentLeft - speed, 0); // Ensure jet stays within the board
-    this.animateJetMovement(currentLeft, targetLeft);
+    let left = 0;
+    let jetSpeed = 0;
+
+    if (currentLeft === -1){
+      left = parseInt(window.getComputedStyle(this.jet).getPropertyValue("left"));
+      jetSpeed = 20; // ship speed
+    } else {
+      left = currentLeft;
+      jetSpeed = speed;
+
+    }
+    const targetLeft = Math.max(left - jetSpeed, 0); // Ensure jet stays within the board
+    this.animateJetMovement(left, targetLeft);
   }
 
   moveJetRight(currentLeft: number, speed: number) {
+    let left = 0;
+    let jetSpeed = 0;
+
+    if (currentLeft === -1){
+      left = parseInt(window.getComputedStyle(this.jet).getPropertyValue("left"));
+      jetSpeed = 20; // ship speed
+    } else {
+      left = currentLeft;
+      jetSpeed = speed;
+
+    }
     const boardWidth = this.board.clientWidth;
     const jetWidth = this.jet.clientWidth;
-    const targetLeft = Math.min(currentLeft + speed, boardWidth - jetWidth); // Ensure jet stays within the board
-    this.animateJetMovement(currentLeft, targetLeft);
+    const targetLeft = Math.min(left + jetSpeed, boardWidth - jetWidth); // Ensure jet stays within the board
+    this.animateJetMovement(left, targetLeft);
   }
 
   animateJetMovement(startLeft: number, targetLeft: number) {
