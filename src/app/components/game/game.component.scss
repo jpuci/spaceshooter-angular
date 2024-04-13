@@ -21,6 +21,8 @@ body {
   border: 2px solid white;
   background-color: black;
   overflow: hidden;
+  background-size: cover;
+  background-position: center;
 }
 
 #jet {
@@ -39,6 +41,9 @@ body {
   object-fit: fill;
   min-width: 50px;
   min-height: 50px;
+}
+.jet-life i {
+  color: white; /* Set the color of the heart icons to white */
 }
 
 .bullets {
@@ -63,6 +68,29 @@ body {
   min-width: 50px;
   min-height: 50px;
 }
+
+.coins {
+  position: absolute;
+  top: 0px;
+  width: 3vh;
+  height: 3vh;
+  background-color: transparent;
+  color: white;
+  background: url("/assets/coin.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+/* Reduce opacity for rocks with reduced life */
+.rocks.low-life_1 {
+  /* Adjust the filter properties as needed */
+  filter: brightness(100%) hue-rotate(0deg) saturate(50%) brightness(100%) contrast(100%) sepia(100%);
+}
+
+.rocks.low-life_2 {
+  opacity: 0.5; /* Adjust the opacity value as needed */
+}
+
 #points {
   position: absolute;
   top: 0;

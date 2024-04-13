@@ -1,13 +1,10 @@
 import {Component, OnInit, HostListener, AfterViewInit} from '@angular/core';
 import {Rock} from "../../model/rock";
 import {Bullet} from "../../model/bullet";
+import { GameService } from 'src/app/components/GameService';
+import {Coin} from "../../model/coin";
+import { MapSelectorService } from '../map-selector/map-serv.service';
 import {Router} from "@angular/router";
-
-// import webgazer from 'webgazer';
-
-// console.log(webgazer);
-// import * as webgazer from 'webgazer';
-// declare var webgazer: any;
 
 declare var webgazer: any;
 
@@ -22,18 +19,34 @@ declare var webgazer: any;
 export class GameComponent implements OnInit, AfterViewInit {
   // @Input() left: number;
   // @Input() bottom: number;
-
-
   jet: any;
   board: any;
   start: boolean = false;
+  damage: number = 0;
+  movement: number = 0;
+  num_bullets:number = 0;
+  jetId: string = "";
 
   rocks: any[] = [];
+  coins: any[] = [];
   rocksLeftTop: Rock[] = [];
+  coinsLeftTop: Coin[] = [];
   bullets: Bullet[] = [];
+  CollectedCoins: number = 0;
+  maps: string[] = ['assets/map1.jpg', 'assets/map2.jepg', 'assets/map3.jpg'];
+
   nextBullet = 0;
   nextRock = 0;
+  nextCoin: number = 0;
   rockIntervalIds: any[] = [];
+  coinInterval: any[] = []; // Interval for generating coins
+  bulletIntervalIds: any[] = [];
+  playerLife: number = 3; // Initialize player life with 3
+  bulletInterval: any; // Deklaruj identyfikator interwału
+
+  selectedMapPath: number = this.mapService.getMap();
+
+
   diffLevel = 1;
   isMobile = false;
   moveIntervalId: any;
@@ -44,13 +57,39 @@ export class GameComponent implements OnInit, AfterViewInit {
   endMessage=false;
   score = -1;
 
+  constructor(private playerService: GameService,
+              private readonly router: Router,
+              public  mapService: MapSelectorService) {
+    this.jetId = this.playerService.GetID();
+    this.damage = this.playerService.getDamage();
+    this.playerLife = this.playerService.getLife();
+    this.movement = 25*this.playerService.getMovement();
+    this.num_bullets = this.playerService.getBullets();
+    this.playerService.points = '';
+    }
 
-  constructor(private readonly router: Router) {
-  }
+  getFilterStyle(): string {
+    switch (this.jetId) {
+      case '1':
+        return '';
+      case '2':
+        return 'hue-rotate(120deg)';
+      case '3':
+        return 'hue-rotate(220deg)';
+      case '4':
+        return 'hue-rotate(320deg)';
+      default:
+        return '';
+    }
+    }
 
   ngOnInit(): void {
     this.jet = document.getElementById("jet");
     this.board = document.getElementById("board");
+    this.clearIntervals();
+    this.onStart();
+
+    this.selectedMapPath = this.mapService.getMap();
     let diffLevel = localStorage.getItem('diffLevel');
     if (diffLevel == null) {
       localStorage.setItem('diffLevel', '1');
@@ -84,53 +123,104 @@ export class GameComponent implements OnInit, AfterViewInit {
   }
 
 
-  moveLeft() {
+
+
+
+  shootBullet() {
     this.jet = document.getElementById("jet");
+    this.board = document.getElementById("board");
     let left = parseInt(window.getComputedStyle(this.jet).getPropertyValue("left"));
-    if (left > (document.getElementById("board")!.clientLeft)) {
-      this.jet.style.left = left - 2 + "px";
+
+
+
+
+    let numberOfBullets = this.num_bullets; // Adjust the number of bullets as needed
+
+    for (let i = 0; i < numberOfBullets; i++) {
+
+
+      let bul = {
+        bottom: 90, left:document.getElementById("jet")!.clientLeft
+        , width: 20, height: 20, index: this.nextBullet
+      };
+
+      // Adjust the initial left position
+      let index = this.nextBullet;
+      this.nextBullet += 1;
+      this.bullets.push(bul);
+
+
+      let moveBullet = setInterval(() => {
+        // let rocks = document.getElementsByClassName("rocks");
+        for (let rock of this.rocksLeftTop) {
+          let i = this.rocksLeftTop.findIndex(d => d.index === rock.index);
+          let rock2 = this.rocksLeftTop[i];
+          if (rock2 != undefined) {
+            let rockbound = document.getElementById("rock" + rock.index)!.getBoundingClientRect();
+            let bulletbound = document.getElementById("bullet" + index)!.getBoundingClientRect();
+
+            //Condition to check whether the rock/alien and the bullet are at the same position!
+            //If so,then we have to destroy that rock
+
+            if (
+              bulletbound.left >= rockbound.left &&
+              bulletbound.right <= rockbound.right &&
+              bulletbound.top <= rockbound.top &&
+              bulletbound.bottom <= rockbound.bottom
+            ) {
+
+              this.rocksLeftTop[i].life--;
+              let idx = this.bullets.findIndex(d => d.index === index);
+              this.bullets.splice(idx, 1);
+              clearInterval(moveBullet);
+
+              // Check if the life of the rock is greater than 0
+              if (this.rocksLeftTop[i].life <= 0) {
+                this.rocksLeftTop.splice(i, 1);
+
+
+                document.getElementById("points")!.innerHTML =
+                  (parseInt(document.getElementById("points")!.innerHTML) + 1).toString();
+              }
+            }
+          }
+        }
+        let bulletbound = document.getElementById("bullet" + index)!.getBoundingClientRect();
+        let bullettop = bulletbound.top;
+        let bulletbottom = bul.bottom;
+
+        //Stops the bullet from moving outside the gamebox
+        if (bullettop <= document.getElementById("board")!.clientTop) {
+          clearInterval(moveBullet);
+          let idx = this.bullets.findIndex(d => d.index === index);
+          this.bullets.splice(idx, 1);
+        }
+
+
+         bul.left = left +33; //bullet should always be placed at the top of my jet!
+         bul.bottom = bulletbottom + 3;
+        //double bullets
+
+         if (i === 0) {
+           bul.left -= 20; // Adjust the offset for the first bullet
+         } else {
+           bul.left += 1; // Adjust the offset for the second bullet
+         }
+      });
+
+
     }
+
   }
 
-  moveRight() {
-    this.jet = document.getElementById("jet");
-    let left = parseInt(window.getComputedStyle(this.jet).getPropertyValue("left"));
-    if (left <= (document.getElementById("board")!.clientLeft +
-      document.getElementById("board")!.clientWidth - document.getElementById("jet")!.clientWidth)) {
-      this.jet.style.left = left + 2 + "px";
-    }
-  }
+  collectCoin() {
+    // Remove the collected coin from the array
+    this.playerService.addCoin();
+    this.CollectedCoins +=1;
 
-
-  startAction(direction: string): void {
-    this.stopAction(); // Ensure no intervals are running already
-    this.moveIntervalId = window.setInterval(() => {
-      // The function you want to execute repeatedly
-      if (direction === 'left') {
-        this.moveLeft()
-      } else {
-        this.moveRight()
-      }
-    }, 10); // Adjust the interval as needed
-  }
-
-  stopAction(): void {
-    if (this.moveIntervalId !== undefined) {
-      clearInterval(this.moveIntervalId);
-      this.moveIntervalId = undefined;
-    }
-  }
-
-  generateBullet() {
-    this.jet = document.getElementById("jet");
-    let bul = {
-      bottom: 60, left: document.getElementById("jet")!.offsetLeft
-      , width: 20, height: 20, index: this.nextBullet
-    };
-    let index = this.nextBullet;
-    this.nextBullet += 1;
-    this.bullets.push(bul);
-    this.moveBullet(bul, index);
+    // Perform any other actions related to collecting coins
+    // For example, update the player's score
+    // You can also call any necessary service methods here
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -138,145 +228,232 @@ export class GameComponent implements OnInit, AfterViewInit {
     this.jet = document.getElementById("jet");
     this.board = document.getElementById("board");
     let left = parseInt(window.getComputedStyle(this.jet).getPropertyValue("left"));
+    let speed = 20; // ship speed
 
-    if (event.key == "ArrowLeft" && left > (document.getElementById("board")!.clientLeft)) {
-      this.jet.style.left = left - 10 + "px";
-    } else if (event.key == "ArrowRight" && left <= (document.getElementById("board")!.clientLeft +
-      document.getElementById("board")!.clientWidth - document.getElementById("jet")!.clientWidth)) {
-      this.jet.style.left = left + 10 + "px";
-    }
-    if (event.key == "ArrowUp" || event.keyCode == 32) {
-      this.generateBullet();
-
+    if (event.key == "ArrowLeft") {
+      this.moveJetLeft(left, speed);
+    } else if (event.key == "ArrowRight") {
+      this.moveJetRight(left, speed);
     }
   }
 
+  moveJetLeft(currentLeft: number, speed: number) {
+    const targetLeft = Math.max(currentLeft - speed, 0); // Ensure jet stays within the board
+    this.animateJetMovement(currentLeft, targetLeft);
+  }
+
+  moveJetRight(currentLeft: number, speed: number) {
+    const boardWidth = this.board.clientWidth;
+    const jetWidth = this.jet.clientWidth;
+    const targetLeft = Math.min(currentLeft + speed, boardWidth - jetWidth); // Ensure jet stays within the board
+    this.animateJetMovement(currentLeft, targetLeft);
+  }
+
+  animateJetMovement(startLeft: number, targetLeft: number) {
+    const duration = 125 - this.movement; // Adjust animation duration as needed
+    const startTime = performance.now();
+
+    const animate = (currentTime: number) => {
+      const elapsedTime = currentTime - startTime;
+      const percentage = Math.min(elapsedTime / duration, 1);
+
+      const newLeft = startLeft + (targetLeft - startLeft) * percentage;
+      this.jet.style.left = newLeft + 'px';
+
+      if (percentage < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  }
+
+
+  clearIntervals() {
+
+    clearInterval(this.bulletInterval);
+    this.rockIntervalIds.forEach(id => clearInterval(id));
+    this.rockIntervalIds = [];
+
+    this.coinInterval.forEach(id => clearInterval(id));
+    this.coinInterval = [];
+
+    this.bulletIntervalIds.forEach(id => clearInterval(id));
+    this.bulletIntervalIds = [];
+
+    this.bulletIntervalIds.forEach(id => clearInterval(id));
+    this.bulletIntervalIds = [];
+  }
 
   onStart() {
-    this.score = 0;
 
     this.start = true;
+
+    this.bulletInterval = setInterval(() => {
+      this.shootBullet();
+    }, 400);
+
+
+
+
+
     let generateRocks = setInterval(() => {
       this.board = document.getElementById("board");
       this.jet = document.getElementById("jet");
       let rock = document.createElement("div");
+
       rock.classList.add("rocks");
-      rock.style.left = Math.floor(Math.random() * (document.getElementById("board")!.clientWidth - this.rockWidth - 10)) + "px";
+
+      // this.rocks.add(rock)
+      //Just getting the left of the rock to place it in random position...
+      //generate value between 0 to 450 where 450 => board width - rock width
+
+      rock.style.left = Math.floor(Math.random() * (document.getElementById("board")!.clientWidth - document.getElementById("board")!.clientHeight * 0.09)) + "px";
       rock.style.top = "0px";
-      this.rocksLeftTop.push({'left': rock.style.left, 'top': 0, index: this.nextRock})
+
+
+      // this.board.appendChild(rock);
+      // this.rocks.push(rock);
+      this.rocksLeftTop.push({'left': rock.style.left, 'top': 0, index: this.nextRock, life: 6 - this.damage})
       this.nextRock += 1;
+
+
       if (!this.start) {
         clearInterval(generateRocks);
       }
-    }, Math.round(2000 * (1 / this.diffLevel)));
+    }, 5000);
+
+
 
     this.rockIntervalIds.push(generateRocks)
 
-    let moveRocks = setInterval(() => {
+    let moveRocks = () => {
+
       if (this.rocksLeftTop.length !== 0) {
-
         for (let i = 0; i < this.rocksLeftTop.length; i++) {
-          let rockTop =
-            this.rocksLeftTop[i].top
+          let rockTop = this.rocksLeftTop[i].top;
+          let rockElement = document.getElementById("rock" + this.rocksLeftTop[i].index);
 
-          if (rockTop >= document.getElementById("jet")!.offsetTop - 40) {
-            clearInterval(moveRocks);
-            this.rockIntervalIds.forEach(id => clearInterval(id));
-            this.generateBulletIntervals.forEach(id => clearInterval(id));
-            this.moveBulletIntervals.forEach(id => clearInterval(id));
-            this.rockIntervalIds = []
-            this.start = false;
-            this.endMessage = true;
-            let username = localStorage.getItem('username');
-            let leaderboard: any[] = JSON.parse(localStorage.getItem('leaderboard')!);
-            this.score = parseInt(document.getElementById("points")!.innerHTML);
-            if (leaderboard === null) {
-              leaderboard = []
-            }
-            if (username !== null) {
-              leaderboard.push(
-                {username: username, score: parseInt(document.getElementById("points")!.innerHTML)})
+          if (rockTop >= document.getElementById("jet")!.offsetTop - 40 && rockElement) {
+            //let jetBound = this.jet.getBoundingClientRect();
+            //let rockBound = rockElement.getBoundingClientRect();
+
+            this.rocksLeftTop.splice(i, 1);
+            this.playerLife--;
+
+            if (this.playerLife < 0) {
+              this.playerService.saveToLocalStorage();
+              this.rockIntervalIds.forEach(id => clearInterval(id));
+              this.rockIntervalIds = [];
+              this.start = false;
+              let username = localStorage.getItem('username');
+              let leaderboard: any[] = JSON.parse(localStorage.getItem('leaderboard')!);
+              if (leaderboard === null) {
+                leaderboard = []
+              }
+              if (username !== null) {
+                leaderboard.push({username: username, score: parseInt(document.getElementById("points")!.innerHTML)})
+              } else {
+                leaderboard.push({username: 'Noname', score: parseInt(document.getElementById("points")!.innerHTML)})
+              }
+              localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+              console.log(leaderboard);
+
+               this.playerService.points = document.getElementById("points")!.innerHTML;
+
+             }
+
+          }
+
+          if (rockElement) {
+            if (this.rocksLeftTop[i].life <= 1) {
+              rockElement.classList.add('low-life_1');
             } else {
-              leaderboard.push({username: 'Noname', score: this.score})
+              rockElement.classList.remove('low-life');
             }
-            localStorage.setItem('leaderboard', JSON.stringify(leaderboard))
-            ;
-            console.log(this.score);
-            setTimeout(() =>
-              {
-                this.router.navigate(['/']);
-              },
-              3000);
           }
 
-          this.rocksLeftTop[i].top = rockTop + 25;
+          // Apply the same speed to all rocks
+          this.rocksLeftTop[i].top += 0.5;
+          clearInterval(moveRocksInterval);
+
         }
+
       }
-    }, Math.round(450 * (1 / this.diffLevel)));
+      requestAnimationFrame(moveRocks);
+    };
 
-    if (this.isMobile) {
-      let generateBullet = setInterval(() => {
-        this.generateBullet()
-      }, 300);
-      this.generateBulletIntervals.push(generateBullet);
-    }
+    let moveRocksInterval = setInterval(moveRocks, 5000); // Run the moveRocks function approximately every 1000 milliseconds
 
-  }
+    let generateCoins = setInterval(() => {
+      this.board = document.getElementById("board");
+      this.jet = document.getElementById("jet");
+      let coin = document.createElement("div");
 
-  moveBullet(bul: any, index: number) {
-    let moveBullet = setInterval(() => {
-      // let left = parseInt(window.getComputedStyle(this.jet).getPropertyValue("left"))
-      // let rocks = document.getElementsByClassName("rocks");
-      for (let rock of this.rocksLeftTop) {
-        let i = this.rocksLeftTop.findIndex(d => d.index === rock.index);
-        let rock2 = this.rocksLeftTop[i];
-        if (rock2 != undefined) {
-          let rockbound = document.getElementById("rock" + rock.index)!.getBoundingClientRect();
-          let bulletbound = document.getElementById("bullet" + index)!.getBoundingClientRect();
+      coin.classList.add("coins");
 
-          //Condition to check whether the rock/alien and the bullet are at the same position..!
-          //If so,then we have to destroy that rock
+      // Just getting the left of the coin to place it in a random position...
+      // Generate a value between 0 and 450, where 450 is the board width minus the coin width
+      coin.style.left = Math.floor(Math.random() * (document.getElementById("board")!.clientWidth - document.getElementById("board")!.clientHeight * 0.09)) + "px";
 
-          if (
-            bulletbound.left >= rockbound.left &&
-            bulletbound.right <= rockbound.right &&
-            bulletbound.top <= rockbound.top &&
-            bulletbound.bottom <= rockbound.bottom
-          ) {
+      coin.style.top = "0px";
 
-            // this.rocks.splice(i, 1)
-            this.rocksLeftTop.splice(i, 1)
+      this.coinsLeftTop.push({ 'left': coin.style.left, 'top': 0, index: this.nextCoin });
+      this.nextCoin += 1;
 
-            let idx = this.bullets.findIndex(d => d.index === index);
-            this.bullets.splice(idx, 1);
-            clearInterval(moveBullet);
-            //Scoreboard
-            document.getElementById("points")!.innerHTML =
-              (parseInt(document.getElementById("points")!.innerHTML) + 1).toString();
-          }
-        }
-      }
-      let bulletbound = document.getElementById("bullet" + index)!.getBoundingClientRect();
-      let bullettop = bulletbound.top;
-      let bulletbottom = bul.bottom;
-
-      //Stops the bullet from moving outside the gamebox
-      if (bullettop <= document.getElementById("board")!.clientTop) {
-        clearInterval(moveBullet);
-        let idx = this.bullets.findIndex(d => d.index === index);
-        this.bullets.splice(idx, 1);
-      }
+      // Append the coin to the board
+     // this.board.appendChild(coin);
 
       if (!this.start) {
-        clearInterval(moveBullet);
+        clearInterval(generateCoins);
       }
-      bul.bottom = bulletbottom + 3;
-    });
+    }, 5000);
 
-    this.moveBulletIntervals.push(moveBullet);
+    this.coinInterval.push(generateCoins);
+
+    let moveCoins = () => {
+      if (this.coinsLeftTop.length !== 0) {
+        for (let i = 0; i < this.coinsLeftTop.length; i++) {
+          let coinTop = this.coinsLeftTop[i].top;
+          let coinElement = document.getElementById("coin" + this.coinsLeftTop[i].index);
+
+
+          if (coinElement ) {
+            let jetBound = this.jet.getBoundingClientRect();
+            let coinBound = coinElement.getBoundingClientRect();
+            if (
+              coinBound.left <= jetBound.right &&
+              coinBound.right >= jetBound.left &&
+              coinBound.top <= jetBound.bottom &&
+              coinBound.bottom >= jetBound.top
+            ) {
+              this.collectCoin();
+              this.coinsLeftTop.splice(i, 1);
+            }
+             if (coinTop >= document.getElementById("jet")!.offsetTop +20 && coinElement) {
+               this.coinsLeftTop.splice(i, 1);
+             }
+
+          }
+
+            // Stop the movement of coins that collide with the jet
+            clearInterval(moveCoinsInterval);
+        //  }
+
+          // Apply the same speed to all coins
+          this.coinsLeftTop[i].top += 0.5;
+          clearInterval(moveCoinsInterval);
+        }
+      }
+
+      // Request next animation frame
+      requestAnimationFrame(moveCoins);
+    };
+
+    let moveCoinsInterval = setInterval(moveCoins, 5000);
+
+
   }
 
-
+  protected readonly MapSelectorService = MapSelectorService;
 }
-
-

@@ -14,6 +14,23 @@
   align-items: center;
 }
 
+.coin{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: right;
+  align-items: center;
+  margin-top: -5vw
+
+}
+
+.maintext{
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  //height: 100vh;
+}
+
 #menu-options button {
 
   margin: 10px;

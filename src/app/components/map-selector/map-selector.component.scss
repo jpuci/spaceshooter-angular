@@ -1,0 +1,63 @@
+#top-button button {
+  margin: 1vh -1vw; /* Margin adjusted for responsiveness */
+  width: 5vw; /* Width adjusted for responsiveness */
+  padding: 1vh 0vw; /* Padding adjusted for responsiveness */
+  font-size: 2vw; /* Font size adjusted for responsiveness */
+  cursor: pointer;
+  background-color: transparent;
+  color: white;
+  border: none;
+  border-radius: 1vw; /* Border radius adjusted for responsiveness */
+}
+
+#top-button button:hover {
+  background-color: transparent;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100vh;
+}
+
+.map-container {
+  display: flex;
+  align-items: center;
+}
+
+.map-image {
+  max-width: 80%;
+  min-width: 200px;
+  margin: 0 calc(1em);
+}
+
+h2 {
+  font-size: 3em;
+  color: white;
+  margin-bottom: 7em;
+  margin-top: 2em;
+}
+
+mat-icon {
+  font-size: 32px;
+  color: white;
+}
+
+.icon-button {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transform: scale(2);
+}
+
+.map-container mat-icon {
+  margin: 0;
+}
+
+.map-container .icon-button {
+  margin-left: 0.5em;
+  margin-right: 1.5em;
+}
+

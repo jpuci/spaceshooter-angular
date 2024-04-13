@@ -16,6 +16,11 @@ import {MatIconModule} from "@angular/material/icon";
 import { DifficultyLevelComponent } from './components/settings/difficulty-level/difficulty-level.component';
 import { ShopComponent } from './components/shop/shop.component';
 import { Rocket1Component } from './components/rocket1/rocket1.component';
+import { Rocket2Component } from './components/rocket2/rocket2.component';
+import { Rocket3Component } from './components/rocket3/rocket3.component';
+import { Rocket4Component } from './components/rocket4/rocket4.component';
+import { JetPickComponent } from './components/jet-pick/jet-pick.component';
+import { DefeatComponent } from './components/defeat/defeat.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +34,12 @@ import { Rocket1Component } from './components/rocket1/rocket1.component';
     SettingsComponent,
     DifficultyLevelComponent,
     ShopComponent,
-    Rocket1Component
+    Rocket1Component,
+    Rocket2Component,
+    Rocket3Component,
+    Rocket4Component,
+    JetPickComponent,
+    DefeatComponent
   ],
   imports: [
     BrowserModule,
