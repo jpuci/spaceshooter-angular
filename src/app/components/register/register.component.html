@@ -11,3 +11,19 @@
   </form>
   <!--<router-outlet></router-outlet>-->
 </div>
+
+
+<div *ngIf="showLoadingPopup" class="popup">
+  <div class="popup-content">
+    <p>Zaczekaj jeszcze chwilę, problemy z połączeniem sieciowym</p>
+  </div>
+</div>
+
+
+
+<div *ngIf="showErrorMessage" class="popup">
+  <div class="popup-content">
+    <p>Wystąpił problem z rejestracją, spróbuj jeszcze raz</p>
+    <button class="close-button" (click)="closeErrorMessage()">Zamknij</button>
+  </div>
+</div>
