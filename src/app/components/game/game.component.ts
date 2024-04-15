@@ -132,7 +132,7 @@ export class GameComponent implements OnInit, AfterViewInit {
       } else {
         this.moveJetRight(-1, -1)
       }
-    }, 10); // Adjust the interval as needed
+    }, 100); // Adjust the interval as needed
   }
 
   stopAction(): void {
