@@ -10,12 +10,14 @@ export class DefeatComponent  {
 
 points:string = "";
 coins:number = 0;
+score: number = 0;
   constructor( private playerService: GameService) {
     }
 
   ngOnInit(): void {
     this.coins = this.playerService.GetCoins();
     this.points = this.playerService.GetPoints();
+    this.score = this.playerService.Getscore();
 
   }
 

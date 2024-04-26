@@ -1,29 +1,18 @@
 <body>
 
-<!--<div *ngIf="!this.start" class="align-content-center justify-content-center">-->
-<!--  <button type="button" class="btn btn primary" (click)="onStart()">-->
-<!--    Press to start!-->
-<!--  </button>-->
-<!--  <button type="button" (click)="onStart()" class="btn btn-primary">Press to start!</button>-->
-<!--  <div class="row">-->
-<!--    <div>-->
 
-<!--    </div>-->
-<!--  </div>-->
 
-<!--  </div>-->
-
-<div class="timer">Wynik: {{ timer | number:'2.0-0' }} </div>
+<div class="timer" >Wynik: {{ timer | number:'2.0-0' }} </div>
 <div *ngIf="this.start" class="container">
 
   <div class="row">
     <div id="board" [style.background-image]="'url(' + maps[selectedMapPath] +')'" class="col-10">
       <div id="coins" style="position: absolute; color: white; top: 30px; left: 10px;">
-        <img src="assets/coin.png" alt="Coin" style="width: 10px;"> {{ CollectedCoins }}
+        <img src="assets/coin.png" alt="Coin" style="width: 10px;"> {{ this.getCoins() }}
       </div>
 
 
-      <div id="points"> 0</div>
+
       <div class="jet-life">
 
         <ng-container *ngIf="playerLife === 6">
