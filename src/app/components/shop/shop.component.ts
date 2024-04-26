@@ -20,20 +20,16 @@ export class ShopComponent {
     this.disableButtonsById(buttonIds);
 
 
-    if(this.coins < 100){
+    if(this.coins < 50){
        this.buttonIds1 = ['buy-1', 'buy-2', 'buy-3'];
     }
 
-    if(this.coins >= 100 && this.coins < 200 ){
-       this.buttonIds1 = ['buy-2', 'buy-3'];
-
-    }
-
-    if(this.coins >= 200 && this.coins < 300){
+    if(this.coins >= 50 && this.coins < 150 ){
        this.buttonIds1 = ['buy-3'];
+
     }
 
-    if(this.coins >= 300){
+    if(this.coins >= 150){
       this.buttonIds1 = [];
     }
     this.disableButtonsById(this.buttonIds1);
@@ -66,10 +62,10 @@ export class ShopComponent {
 
   buyRocket(id:string) :void
 {
-  if(id=='2'&& this.playerService.jet_2==0 && this.coins >= 100)
+  if(id=='2'&& this.playerService.jet_2==0 && this.coins >= 50)
   {
-    this.coins -= 100;
-    this.playerService.coins -=100;
+    this.coins -= 50;
+    this.playerService.coins -=50;
     this.enableButtonsById('2');
     this.buttonIds1 = ['buy-1'];
     this.disableButtonsById(this.buttonIds1);
@@ -77,10 +73,10 @@ export class ShopComponent {
     this.ngOnInit();
   }
 
-  if(id=='3'&&this.playerService.jet_3==0 && this.coins >= 200)
+  if(id=='3'&&this.playerService.jet_3==0 && this.coins >= 50)
 {
-  this.coins -= 200;
-  this.playerService.coins -=200;
+  this.coins -= 50;
+  this.playerService.coins -=50;
   this.enableButtonsById('3');
   this.buttonIds1 = ['buy-2'];
   this.disableButtonsById(this.buttonIds1);
@@ -88,10 +84,10 @@ export class ShopComponent {
   this.ngOnInit();
 }
 
-  if(id=='4'&&this.playerService.jet_4==0 && this.coins>=300)
+  if(id=='4'&&this.playerService.jet_4==0 && this.coins>=150)
   {
-    this.coins -= 300;
-    this.playerService.coins -=300;
+    this.coins -= 150;
+    this.playerService.coins -=150;
     this.enableButtonsById('4');
     this.buttonIds1 = ['buy-3'];
     this.disableButtonsById(this.buttonIds1);

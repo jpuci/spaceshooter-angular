@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { GameService } from 'src/app/components/GameService';
 import { Router } from "@angular/router";
+import {GameComponent} from "../game/game.component";
 
 
 @Component({

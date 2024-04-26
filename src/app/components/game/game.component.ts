@@ -4,7 +4,7 @@ import {Bullet} from "../../model/bullet";
 import { GameService } from 'src/app/components/GameService';
 import {Coin} from "../../model/coin";
 import { MapSelectorService } from '../map-selector/map-serv.service';
-
+import { Router, NavigationEnd } from '@angular/router';
 
 
 
@@ -13,18 +13,6 @@ import { MapSelectorService } from '../map-selector/map-serv.service';
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss']
 })
-// export class GameComponent {
-//
-// }
-//
-// // bullet.component.ts
-// import { Component, OnInit, Input, ElementRef, Renderer2 } from '@angular/core';
-//
-// @Component({
-//   selector: 'app-bullet',
-//   template: `<div class="bullets" [style.left.px]="left" [style.bottom.px]="bottom"></div>`,
-//   styles: []
-// })
 
 
 export class GameComponent implements OnInit {
@@ -36,6 +24,7 @@ export class GameComponent implements OnInit {
   damage: number = 0;
   movement: number = 0;
   num_bullets:number = 0;
+  coin_number: number = 5;
   jetId: string = "";
 
   rocks: any[] = [];
@@ -44,11 +33,17 @@ export class GameComponent implements OnInit {
   coinsLeftTop: Coin[] = [];
   bullets: Bullet[] = [];
   CollectedCoins: number = 0;
-  maps: string[] = ['assets/map1.jpg', 'assets/map2.jpg', 'assets/map3.jpg'];
+  maps: string[] = ['assets/map1.jpg', 'assets/map2.jepg', 'assets/map3.jpg'];
 
   nextBullet = 0;
   nextRock = 0;
   nextCoin: number = 0;
+  timer: number = 0;
+  timerInterval: any;
+  rockamount: number = 5000;
+  coinamount: number = 7000;
+  coinspeed:number = 0.5 ;
+  rockspeed:number = 0.5;
   rockIntervalIds: any[] = [];
   coinInterval: any[] = []; // Interval for generating coins
   bulletIntervalIds: any[] = [];
@@ -60,13 +55,23 @@ export class GameComponent implements OnInit {
 
 
   constructor(private playerService: GameService,
-              public  mapService: MapSelectorService) {
+              public  mapService: MapSelectorService,
+              private router: Router) {
     this.jetId = this.playerService.GetID();
     this.damage = this.playerService.getDamage();
     this.playerLife = this.playerService.getLife();
     this.movement = 25*this.playerService.getMovement();
     this.num_bullets = this.playerService.getBullets();
     this.playerService.points = '';
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        if (event.url === '/game') {
+
+          this.clearIntervals();
+        }
+      }
+    });
 
   }
 
@@ -92,11 +97,54 @@ export class GameComponent implements OnInit {
     this.onStart();
 
     this.selectedMapPath = this.mapService.getMap();
-
+    this.startTimer();
   }
 
 
 
+  startTimer() {
+    // Start the timer interval
+    this.timerInterval = setInterval(() => {
+      if(this.timer == 60){
+        this.coin_number = 10;
+        this.rockamount=3000;
+        this.coinamount=5000;
+        this.clearIntervals();
+        this.onStart();
+      }
+
+     if(this.timer == 120){
+        this.coin_number = 15;
+        this.rockamount=2000;
+        this.coinamount=4000;
+        this.clearIntervals();
+        this.onStart();
+      }
+
+      if(this.timer == 180){
+        this.coin_number = 20;
+        this.rockamount=1000;
+        this.coinamount=3000;
+        this.clearIntervals();
+        this.onStart();
+      }
+
+
+      if(this.timer == 200) {
+        this.rockspeed = 0.2;
+        this.rockamount=500;
+        this.clearIntervals();
+        this.onStart();
+      }
+
+      this.timer++; // Increment the timer by 1 second
+    }, 1000); // Update the timer every second
+  }
+
+  stopTimer() {
+    // Stop the timer interval
+    clearInterval(this.timerInterval);
+  }
 
 
   shootBullet() {
@@ -150,6 +198,7 @@ export class GameComponent implements OnInit {
               // Check if the life of the rock is greater than 0
               if (this.rocksLeftTop[i].life <= 0) {
                 this.rocksLeftTop.splice(i, 1);
+                this.playerService.Shipdestroyed();
 
 
                 document.getElementById("points")!.innerHTML =
@@ -187,13 +236,11 @@ export class GameComponent implements OnInit {
   }
 
   collectCoin() {
-    // Remove the collected coin from the array
     this.playerService.addCoin();
-    this.CollectedCoins +=1;
+  }
 
-    // Perform any other actions related to collecting coins
-    // For example, update the player's score
-    // You can also call any necessary service methods here
+  getCoins() : number {
+    return this.playerService.coins;
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -254,12 +301,10 @@ export class GameComponent implements OnInit {
     this.bulletIntervalIds.forEach(id => clearInterval(id));
     this.bulletIntervalIds = [];
 
-    this.bulletIntervalIds.forEach(id => clearInterval(id));
-    this.bulletIntervalIds = [];
   }
 
   onStart() {
-
+    this.clearIntervals();
     this.start = true;
 
     this.bulletInterval = setInterval(() => {
@@ -294,12 +339,13 @@ export class GameComponent implements OnInit {
       if (!this.start) {
         clearInterval(generateRocks);
       }
-    }, 5000);
+    }, this.rockamount);
 
 
 
     this.rockIntervalIds.push(generateRocks)
 
+    let moveRocksInterval: any;
     let moveRocks = () => {
 
       if (this.rocksLeftTop.length !== 0) {
@@ -315,9 +361,12 @@ export class GameComponent implements OnInit {
             this.playerLife--;
 
             if (this.playerLife < 0) {
+              this.stopTimer();
+              if(this.timer>=this.playerService.Getscore()){
+                this.playerService.Bestscore(this.timer);
+              }
               this.playerService.saveToLocalStorage();
-              this.rockIntervalIds.forEach(id => clearInterval(id));
-              this.rockIntervalIds = [];
+              this.clearIntervals();
               this.start = false;
               let username = localStorage.getItem('username');
               let leaderboard: any[] = JSON.parse(localStorage.getItem('leaderboard')!);
@@ -325,9 +374,9 @@ export class GameComponent implements OnInit {
                 leaderboard = []
               }
               if (username !== null) {
-                leaderboard.push({username: username, score: parseInt(document.getElementById("points")!.innerHTML)})
+                leaderboard.push({username: username, score: this.playerService.Getscore()})
               } else {
-                leaderboard.push({username: 'Noname', score: parseInt(document.getElementById("points")!.innerHTML)})
+                leaderboard.push({username: 'Noname', score: this.playerService.Getscore()})
               }
               localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
               console.log(leaderboard);
@@ -347,7 +396,7 @@ export class GameComponent implements OnInit {
           }
 
           // Apply the same speed to all rocks
-          this.rocksLeftTop[i].top += 0.5;
+          this.rocksLeftTop[i].top += this.rockspeed;
           clearInterval(moveRocksInterval);
 
         }
@@ -356,7 +405,9 @@ export class GameComponent implements OnInit {
       requestAnimationFrame(moveRocks);
     };
 
-    let moveRocksInterval = setInterval(moveRocks, 5000); // Run the moveRocks function approximately every 1000 milliseconds
+    moveRocksInterval = setInterval(moveRocks, this.rockamount);
+
+
 
     let generateCoins = setInterval(() => {
       this.board = document.getElementById("board");
@@ -380,7 +431,7 @@ export class GameComponent implements OnInit {
       if (!this.start) {
         clearInterval(generateCoins);
       }
-    }, 5000);
+    }, this.coinamount);
 
     this.coinInterval.push(generateCoins);
 
@@ -414,7 +465,7 @@ export class GameComponent implements OnInit {
         //  }
 
           // Apply the same speed to all coins
-          this.coinsLeftTop[i].top += 0.5;
+          this.coinsLeftTop[i].top += this.coinspeed;
           clearInterval(moveCoinsInterval);
         }
       }
@@ -423,7 +474,7 @@ export class GameComponent implements OnInit {
       requestAnimationFrame(moveCoins);
     };
 
-    let moveCoinsInterval = setInterval(moveCoins, 5000);
+    let moveCoinsInterval = setInterval(moveCoins, this.coinamount);
 
 
   }
