@@ -5,9 +5,9 @@
   <!-- Password -->
   <input type="password" id="defaultLoginFormPassword" class="form-control mb-4" [(ngModel)]="password" placeholder="Hasło" name="password">
   <div class="d-flex justify-content-around">
-    <p class="error-message" *ngIf="isIncorrect"> Incorrect login or password</p>
+    <p class="error-message" *ngIf="isIncorrect">Błędny login lub hasło</p>
   </div>
-  <button class="btn btn-primary"  type="submit" (click)="onSubmit()">Login</button>
+  <button class="btn btn-primary"  type="submit" (click)="onSubmit()">Zaloguj się</button>
 </form>
 <!--<router-outlet></router-outlet>-->
 </div>
