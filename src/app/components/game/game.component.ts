@@ -33,7 +33,7 @@ export class GameComponent implements OnInit {
   coinsLeftTop: Coin[] = [];
   bullets: Bullet[] = [];
   CollectedCoins: number = 0;
-  maps: string[] = ['assets/map1.jpg', 'assets/map2.jepg', 'assets/map3.jpg'];
+  maps: string[] = ['assets/map1.jpg', 'assets/map2.jpg', 'assets/map3.jpg'];
 
   nextBullet = 0;
   nextRock = 0;
