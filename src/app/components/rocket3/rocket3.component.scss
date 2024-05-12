@@ -97,3 +97,130 @@ button {
 mat-icon{
   color: white;
 }
+
+@media only screen and (max-width: 600px) {
+
+  .progress {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .progress img{
+    margin: 25px;
+    max-width: 40%;
+    max-height: 40%;
+  }
+
+  .coin{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: right;
+    align-items: center;
+    margin-top: -3vw
+
+  }
+
+  .progress-container {
+    margin-bottom: 20px;
+    margin-left: -20vw;
+    display: flex;
+    align-items: center;
+  }
+
+  .progress-label {
+    width: 10px;
+    text-align: right;
+    color: white;
+    font-size: 16px;
+    margin: 10px 80px;
+  }
+  .progress-bar {
+    width: 150px;
+    height: 10px;
+    background-color: lightgray;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .progress-value {
+    height: 100%;
+    background-color: green;
+  }
+  button {
+    margin: 10px;
+    width: 50px; /* Adjust the width as needed */
+    padding: 10px;
+    font-size: 25px;
+    cursor: pointer;
+    background-color: transparent;
+    color: white;
+    border: none;
+    border-radius: 5px;
+  }
+
+
+  #bottom-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+  }
+
+  #bottom-buttons button {
+    margin: 0px;
+    width: 25px; /* Adjust the width as needed */
+    padding: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: transparent;
+    color: white;
+    border: none;
+    border-radius: 5px;
+  }
+
+  #bottom-buttons button:hover {
+    background-color: transparent;
+  }
+
+
+  .top {
+    margin: 10px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+
+  #top-button {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+  }
+
+  mat-icon{
+    color: white;
+  }
+
+  .coin-container {
+    color: white;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+
+
+  }
+
+  .coin-container img {
+    width: auto;
+    height: auto;
+    margin-left: 0;
+  }
+}

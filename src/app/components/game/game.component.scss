@@ -10,7 +10,6 @@ body {
   align-content: center;
   align-items: center;
 }
-
 #board {
   position: relative;
   height: 70vh;
@@ -41,7 +40,10 @@ body {
 }
 .jet-life i {
   color: white; /* Set the color of the heart icons to white */
+  width: 200px;
+  height: 200px;
 }
+
 
 .bullets {
   position: absolute;
@@ -66,7 +68,6 @@ body {
 
 .coins {
   position: absolute;
-  top: 0px;
   width: 3vh;
   height: 3vh;
   background-color: transparent;
@@ -116,4 +117,14 @@ body {
 .control-row{
   display: flex;
   justify-content: space-between;
+}
+
+.timer{
+  position: absolute;
+  top: 100px; /* Adjust top position as needed */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Center horizontally */
+  color: white;
+  font-size: 30px;
+  text-align: center;
 }

@@ -18,9 +18,10 @@ export class GameService {
   speed_4: number = 1;
   speed: number = 1;
   selectedJet: string = '1';
-  coins: number = 350;
+  coins: number = 0;
   bullets: number = 1;
   points: string = '';
+  bestscore: number = 0;
 
   jet_2: number = 0;
   jet_3: number = 0;
@@ -30,6 +31,9 @@ export class GameService {
     this.loadFromLocalStorage();
   }
 
+  Getscore():number{
+    return this.bestscore;
+  }
   GetCoins(): number {
     return this.coins;
   }
@@ -39,7 +43,14 @@ export class GameService {
   }
 
   addCoin(): void {
-    this.coins += 1;
+    this.coins += 5;
+  }
+
+  Shipdestroyed(){
+    this.coins+=2;
+  }
+  Bestscore(score:number){
+    this.bestscore = score;
   }
 
   GetID(): string {
@@ -134,7 +145,8 @@ export class GameService {
       speed_4: 1,
       speed: 1,
       selectedJet: '1',
-      coins: 350,
+      coins: 30,
+      bestscore: 0,
       bullets: 1,
       points: '',
       jet_2: 0,

@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {LeaderboardEntry} from "../../model/LeaderboardEntry";
+import {GameService} from "../GameService";
 
 @Component({
   selector: 'app-register',
@@ -15,7 +16,7 @@ export class RegisterComponent implements OnInit{
   users: any[] = [{user: "User1", password: "xyz"}, {user: "User2", password: "123"}];
   isIncorrect = false;
 
-  constructor(private readonly router: Router){
+  constructor(private readonly router: Router, private playerService: GameService){
 
   }
 
@@ -34,6 +35,7 @@ export class RegisterComponent implements OnInit{
       this.users.push({user:this.username, password:this.password})
       localStorage.setItem('users', JSON.stringify(this.users))
       localStorage.setItem("username", this.username)
+      this.playerService.clearLocalStorage();
       this.router.navigate(['/menu']);
     }
   }
