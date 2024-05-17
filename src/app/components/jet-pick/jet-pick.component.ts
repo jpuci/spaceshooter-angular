@@ -33,6 +33,7 @@ export class JetPickComponent {
   getIDWithDelay(id: string): void {
     setTimeout(() => {
       this.showLoadingPopup = true;
+      this.getID('1')
 
       setTimeout(() => {
         this.router.navigate(['/game']);

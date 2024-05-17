@@ -93,7 +93,6 @@ export class GameComponent implements OnInit {
   ngOnInit(): void {
     this.jet = document.getElementById("jet");
     this.board = document.getElementById("board");
-    this.clearIntervals();
     this.onStart();
 
     this.selectedMapPath = this.mapService.getMap();
@@ -109,7 +108,6 @@ export class GameComponent implements OnInit {
         this.coin_number = 10;
         this.rockamount=3000;
         this.coinamount=5000;
-        this.clearIntervals();
         this.onStart();
       }
 
@@ -117,7 +115,6 @@ export class GameComponent implements OnInit {
         this.coin_number = 15;
         this.rockamount=2000;
         this.coinamount=4000;
-        this.clearIntervals();
         this.onStart();
       }
 
@@ -125,7 +122,6 @@ export class GameComponent implements OnInit {
         this.coin_number = 20;
         this.rockamount=1000;
         this.coinamount=3000;
-        this.clearIntervals();
         this.onStart();
       }
 
@@ -133,7 +129,6 @@ export class GameComponent implements OnInit {
       if(this.timer == 200) {
         this.rockspeed = 0.2;
         this.rockamount=500;
-        this.clearIntervals();
         this.onStart();
       }
 
@@ -291,15 +286,15 @@ export class GameComponent implements OnInit {
 
   clearIntervals() {
 
-    clearInterval(this.bulletInterval);
+   clearInterval(this.bulletInterval);
     this.rockIntervalIds.forEach(id => clearInterval(id));
     this.rockIntervalIds = [];
 
     this.coinInterval.forEach(id => clearInterval(id));
     this.coinInterval = [];
 
-    this.bulletIntervalIds.forEach(id => clearInterval(id));
-    this.bulletIntervalIds = [];
+    //this.bulletIntervalIds.forEach(id => clearInterval(id));
+   // this.bulletIntervalIds = [];
 
   }
 
@@ -366,7 +361,7 @@ export class GameComponent implements OnInit {
                 this.playerService.Bestscore(this.timer);
               }
               this.playerService.saveToLocalStorage();
-              this.clearIntervals();
+              //this.clearIntervals();
               this.start = false;
               let username = localStorage.getItem('username');
               let leaderboard: any[] = JSON.parse(localStorage.getItem('leaderboard')!);
