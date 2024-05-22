@@ -33,3 +33,10 @@
     <button class="close-button" (click)="closeErrorMessage()">Zamknij</button>
   </div>
 </div>
+
+<div *ngIf="showRegisteredMessage" class="popup">
+  <div class="popup-content">
+    <p>Zarejestrowano pomyślnie!</p>
+    <button class="close-button" (click)="closeRegisteredMessage()">Zamknij</button>
+  </div>
+</div>

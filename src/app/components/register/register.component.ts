@@ -17,9 +17,10 @@ export class RegisterComponent implements OnInit {
   isIncorrect = false;
   showLoadingPopup = false;
   showErrorMessage = false;
+  showRegisteredMessage = false;
   tmp: number = 0
 
-  constructor(private readonly router: Router, private playerService: GameService){
+  constructor(private readonly router: Router, private playerService: GameService) {
 
   }
 
@@ -28,6 +29,17 @@ export class RegisterComponent implements OnInit {
       localStorage.setItem('users', JSON.stringify(this.users))
     }
 
+  }
+
+  waitForRegisteredMessageToClose(): Promise<void> {
+    return new Promise((resolve) => {
+      const checkInterval = setInterval(() => {
+        if (!this.showRegisteredMessage) {
+          clearInterval(checkInterval);
+          resolve();
+        }
+      }, 100); // Sprawdzaj co 100ms
+    });
   }
 
   onSubmit() {
@@ -51,14 +63,20 @@ export class RegisterComponent implements OnInit {
         localStorage.setItem('users', JSON.stringify(this.users))
         localStorage.setItem("username", this.username)
         this.playerService.clearLocalStorage();
-        this.router.navigate(['/menu']);
-      }
+        this.showRegisteredMessage = true;
+        this.waitForRegisteredMessageToClose().then(() => {
+          this.router.navigate(['/menu']);
+        });      }
 
     }
   }
 
   closeErrorMessage() {
     this.showErrorMessage = false;
+  }
+
+  closeRegisteredMessage() {
+    this.showRegisteredMessage = false;
   }
 
 }

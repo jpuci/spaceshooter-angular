@@ -47,7 +47,10 @@ mat-icon {
   max-width: 80%;
   min-width: 200px;
   margin: 0 calc(1em);
+  border: 5px solid yellow;
+  border-radius: 5px;
 }
+
 
 h2 {
   font-size: 3em;
