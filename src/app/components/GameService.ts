@@ -145,7 +145,7 @@ export class GameService {
       speed_4: 1,
       speed: 1,
       selectedJet: '1',
-      coins: 300,
+      coins: 30,
       bestscore: 0,
       bullets: 1,
       points: '',

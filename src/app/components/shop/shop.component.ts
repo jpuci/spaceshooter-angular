@@ -84,10 +84,10 @@ export class ShopComponent {
   this.ngOnInit();
 }
 
-  if(id=='4'&&this.playerService.jet_4==0 && this.coins>=150)
+  if(id=='4'&&this.playerService.jet_4==0 && this.coins>=100)
   {
-    this.coins -= 150;
-    this.playerService.coins -=150;
+    this.coins -= 100;
+    this.playerService.coins -=100;
     this.enableButtonsById('4');
     this.buttonIds1 = ['buy-3'];
     this.disableButtonsById(this.buttonIds1);

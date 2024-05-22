@@ -14,23 +14,38 @@
 <div class="wrapper">
   <div class="container1">
     <div class="button1">
+      <div class="buy-button" id="buy-0" style="font-size: 20px; background-color: green"> Odblokowano
+      </div>
+
       <div class="buy-button" id="buy-1" (click)="buyRocket('2')" [ngClass]="{ 'purchased': playerService.jet_2 === 1 }">
-        <span>{{ playerService.jet_2 === 1 ? 'Kupiono' : 'Kup za: 50' }}</span>
+        <span>{{ playerService.jet_2 === 1 ? 'Odblokowano' : 'Kup za: 50' }}</span>
       </div>
       <div class="buy-button" id="buy-2" (click)="buyRocket('3')" [ngClass]="{ 'purchased': playerService.jet_3 === 1 }">
-        <span>{{ playerService.jet_3 === 1 ? 'Kupiono' : 'Kup za: 50' }}</span>
+        <span>{{ playerService.jet_3 === 1 ? 'Odblokowano' : 'Kup za: 50' }}</span>
       </div>
       <div class="buy-button" id="buy-3" (click)="buyRocket('4')" [ngClass]="{ 'purchased': playerService.jet_4 === 1 }">
-        <span>{{ playerService.jet_4 === 1 ? 'Kupiono' : 'Kup za: 150' }}</span>
+        <span>{{ playerService.jet_4 === 1 ? 'Odblokowano' : 'Kup za: 100' }}</span>
       </div>
     </div>
   </div>
   <div class="button">
+
     <button id="1" routerLink="/rocket1" (click)="getID('1')"> <img src="assets/rocket.png"></button>
     <button id="2" routerLink="/rocket2" (click)="getID('2')"> <img src="assets/rocket.png" style="filter: hue-rotate(120deg)"></button>
     <button id="3" routerLink="/rocket3" (click)="getID('3')"> <img src="assets/rocket.png" style="filter: hue-rotate(220deg)"></button>
     <button id="4" routerLink="/rocket4" (click)="getID('4')"> <img src="assets/rocket.png" style="filter: hue-rotate(320deg)"></button>
   </div>
+
+
+
+  <div class="opis" style="color: white; font-size: 25px">
+    <div class="description" style="padding-left: 50px">Rakieta standardowa</div>
+    <div class="description"  style="padding-left: 80px">Podwójne strzały</div>
+    <div class="description" style="padding-left: 80px " >Zwiększone życie</div>
+    <div class="description"  style="padding-right: 00px ">Podwójne strzały i więcej życia</div>
+  </div>
+
+
 </div>
 
 

@@ -5,7 +5,7 @@
   flex-wrap: wrap;
   align-items: center;
   height: 75vh; /* Set the wrapper height to 75% of the viewport height */
-  margin-top: 5vw
+  margin-top: 10vw
 }
 
 .coin{
@@ -23,6 +23,16 @@
   align-items: center;
 }
 
+.opis{
+
+  justify-content: space-between;
+  display: flex;
+  height: 30vh; /* Height adjusted for responsiveness */
+  width: 140vh;
+  border: none;
+  overflow: hidden;
+}
+
 .purchased {
   background-color: green;
 }
@@ -30,7 +40,11 @@
 .button1 {
   display: flex;
 }
+#buy-0 {
 
+  margin-left: 10vw; /* Margin adjusted for responsiveness */
+  margin-right: -20vw; /* Margin adjusted for responsiveness */
+}
 #buy-1 {
 
   margin-left: 29vw; /* Margin adjusted for responsiveness */
@@ -131,13 +145,14 @@
   justify-content: flex-end;
   position: absolute;
 
+
 }
 
 #top-button button {
-  margin: 1vh -1vw; /* Margin adjusted for responsiveness */
+  margin: 0vh 0vw; /* Margin adjusted for responsiveness */
   width: 5vw; /* Width adjusted for responsiveness */
   padding: 1vh 0vw; /* Padding adjusted for responsiveness */
-  font-size: 2vw; /* Font size adjusted for responsiveness */
+  font-size: 3vw; /* Font size adjusted for responsiveness */
   cursor: pointer;
   background-color: transparent;
   color: white;

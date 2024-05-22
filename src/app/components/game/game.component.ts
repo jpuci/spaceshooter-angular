@@ -40,10 +40,10 @@ export class GameComponent implements OnInit {
   nextCoin: number = 0;
   timer: number = 0;
   timerInterval: any;
-  rockamount: number = 5000;
-  coinamount: number = 7000;
-  coinspeed:number = 0.5 ;
-  rockspeed:number = 0.5;
+  rockamount: number = 3000;
+  coinamount: number = 5000;
+  coinspeed:number = 1.5 ;
+  rockspeed:number = 1;
   rockIntervalIds: any[] = [];
   coinInterval: any[] = []; // Interval for generating coins
   bulletIntervalIds: any[] = [];
@@ -104,33 +104,34 @@ export class GameComponent implements OnInit {
   startTimer() {
     // Start the timer interval
     this.timerInterval = setInterval(() => {
-      if(this.timer == 60){
-        this.coin_number = 10;
-        this.rockamount=3000;
-        this.coinamount=5000;
-        this.onStart();
-      }
+        if(this.timer == 60){
+          this.coin_number = 10;
+          this.rockamount=3000;
+          this.coinamount=5000;
+          this.onStart();
+        }
 
-     if(this.timer == 120){
-        this.coin_number = 15;
-        this.rockamount=2000;
-        this.coinamount=4000;
-        this.onStart();
-      }
+        if(this.timer == 120){
+          this.coin_number = 15;
+          this.rockamount=2000;
+          this.coinamount=4000;
+          this.onStart();
+        }
 
-      if(this.timer == 180){
-        this.coin_number = 20;
-        this.rockamount=1000;
-        this.coinamount=3000;
-        this.onStart();
-      }
+        if(this.timer == 180){
+          this.coin_number = 20;
+          this.rockamount=1000;
+          this.coinamount=3000;
+          this.onStart();
+        }
 
 
-      if(this.timer == 200) {
-        this.rockspeed = 0.2;
-        this.rockamount=500;
-        this.onStart();
-      }
+        if(this.timer == 200) {
+          this.rockspeed = 0.2;
+          this.rockamount=500;
+          this.onStart();
+        }
+
 
       this.timer++; // Increment the timer by 1 second
     }, 1000); // Update the timer every second
@@ -299,7 +300,7 @@ export class GameComponent implements OnInit {
   }
 
   onStart() {
-    this.clearIntervals();
+    //this.clearIntervals();
     this.start = true;
 
     this.bulletInterval = setInterval(() => {
@@ -332,7 +333,7 @@ export class GameComponent implements OnInit {
 
 
       if (!this.start) {
-        clearInterval(generateRocks);
+       // clearInterval(generateRocks);
       }
     }, this.rockamount);
 
@@ -424,7 +425,7 @@ export class GameComponent implements OnInit {
      // this.board.appendChild(coin);
 
       if (!this.start) {
-        clearInterval(generateCoins);
+       // clearInterval(generateCoins);
       }
     }, this.coinamount);
 
