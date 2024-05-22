@@ -140,7 +140,7 @@ export class GameComponent implements OnInit, AfterViewInit {
   startTimer() {
     // Start the timer interval
     this.timerInterval = setInterval(() => {
-      if(this.timer == 60){
+      if(this.timer == 30){
         this.coin_number = 10;
         this.rockamount=3000;
         this.coinamount=5000;
@@ -148,7 +148,7 @@ export class GameComponent implements OnInit, AfterViewInit {
         this.onStart();
       }
 
-      if(this.timer == 120){
+      if(this.timer == 60){
         this.coin_number = 15;
         this.rockamount=2000;
         this.coinamount=4000;
@@ -156,7 +156,7 @@ export class GameComponent implements OnInit, AfterViewInit {
         this.onStart();
       }
 
-      if(this.timer == 180){
+      if(this.timer == 90){
         this.coin_number = 20;
         this.rockamount=1000;
         this.coinamount=3000;
@@ -165,7 +165,7 @@ export class GameComponent implements OnInit, AfterViewInit {
       }
 
 
-      if(this.timer == 200) {
+      if(this.timer == 120) {
         this.rockspeed = 0.2;
         this.rockamount=500;
         this.clearIntervals();
@@ -264,6 +264,7 @@ export class GameComponent implements OnInit, AfterViewInit {
 
               this.rocksLeftTop[i].life--;
               let idx = this.bullets.findIndex(d => d.index === index);
+              console.log(idx);
               this.bullets.splice(idx, 1);
               clearInterval(moveBullet);
 
@@ -301,6 +302,9 @@ export class GameComponent implements OnInit, AfterViewInit {
            bul.left += 1; // Adjust the offset for the second bullet
          }
       });
+
+      this.bulletIntervalIds.push(moveBullet);
+      console.log(this.bulletIntervalIds.length);
 
 
     }
