@@ -27,6 +27,8 @@ export class GameComponent implements OnInit, AfterViewInit {
   num_bullets:number = 0;
   coin_number: number = 5;
   jetId: string = "";
+  screenHeight: number;
+  screenWidth: number;
 
   rocks: any[] = [];
   coins: any[] = [];
@@ -66,14 +68,15 @@ export class GameComponent implements OnInit, AfterViewInit {
   constructor(private playerService: GameService,
               public  mapService: MapSelectorService,
               private router: Router) {
-              private readonly router: Router,
-              public  mapService: MapSelectorService) {
     this.jetId = this.playerService.GetID();
     this.damage = this.playerService.getDamage();
     this.playerLife = this.playerService.getLife();
     this.movement = 25 * this.playerService.getMovement();
     this.num_bullets = this.playerService.getBullets();
     this.playerService.points = '';
+    this.screenHeight = window.innerHeight;
+    this.screenWidth = window.innerWidth;
+    this.getScreenSize();
 
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -83,8 +86,40 @@ export class GameComponent implements OnInit, AfterViewInit {
         }
       }
     });
-
   }
+
+  @HostListener('window:resize', ['$event'])
+  getScreenSize(event?: any) {
+    this.screenHeight = window.innerHeight;
+    this.screenWidth = window.innerWidth;
+    console.log(this.screenHeight, this.screenWidth);
+  }
+
+    ngOnInit(): void {
+      this.jet = document.getElementById("jet");
+      this.board = document.getElementById("board");
+      this.clearIntervals();
+      this.onStart();
+
+      this.selectedMapPath = this.mapService.getMap();
+      this.startTimer();
+
+      let diffLevel = localStorage.getItem('diffLevel');
+      if (diffLevel == null) {
+        localStorage.setItem('diffLevel', '1');
+      } else {
+        this.diffLevel = Number(diffLevel);
+      }
+
+      let ua = navigator.userAgent;
+
+
+
+      if (this.screenWidth <= 800) {
+        this.isMobile = true;
+        this.rockWidth = 50;
+        this.rockHeight = 50;
+      }
     }
 
   getFilterStyle(): string {
@@ -102,33 +137,6 @@ export class GameComponent implements OnInit, AfterViewInit {
     }
     }
 
-  ngOnInit(): void {
-    this.jet = document.getElementById("jet");
-    this.board = document.getElementById("board");
-    this.clearIntervals();
-    this.onStart();
-
-    this.selectedMapPath = this.mapService.getMap();
-    this.startTimer();
-  }
-
-
-    let diffLevel = localStorage.getItem('diffLevel');
-    if (diffLevel == null) {
-      localStorage.setItem('diffLevel', '1');
-    } else {
-      this.diffLevel = Number(diffLevel);
-    }
-
-      let ua = navigator.userAgent;
-
-    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(ua)){
-      this.isMobile = true;
-      this.rockWidth = 50;
-      this.rockHeight = 50;
-    }
-  }
-
   startTimer() {
     // Start the timer interval
     this.timerInterval = setInterval(() => {
@@ -139,42 +147,8 @@ export class GameComponent implements OnInit, AfterViewInit {
         this.clearIntervals();
         this.onStart();
       }
-  ngAfterViewInit(): void {
-    // webgazer.begin().then(function() {
-    //   console.log("WebGazer has initialized.");
-    // }).catch(function(error:any) {
-    //   console.error("Initialization error:", error);
-    // });
-    // console.log(webgazer)
-    // webgazer.setGazeListener((data:any, elapsedTime:any) => {
-    //   if (data == null) {
-    //     console.log('sad :(')
-    //     return;
-    //   }
-    //   console.log(data.x, data.y);
-    // }).begin();
-  }
 
-
-  startAction(direction: string): void {
-    this.stopAction(); // Ensure no intervals are running already
-    this.moveIntervalId = window.setInterval(() => {
-      // The function you want to execute repeatedly
-      if (direction === 'left') {
-        this.moveJetLeft(-1, -1)
-      } else {
-        this.moveJetRight(-1, -1)
-      }
-    }, 100); // Adjust the interval as needed
-  }
-
-  stopAction(): void {
-    if (this.moveIntervalId !== undefined) {
-      clearInterval(this.moveIntervalId);
-      this.moveIntervalId = undefined;
-    }
-  }
-     if(this.timer == 120){
+      if(this.timer == 120){
         this.coin_number = 15;
         this.rockamount=2000;
         this.coinamount=4000;
@@ -200,6 +174,43 @@ export class GameComponent implements OnInit, AfterViewInit {
 
       this.timer++; // Increment the timer by 1 second
     }, 1000); // Update the timer every second
+  }
+
+  ngAfterViewInit(): void {
+    // webgazer.begin().then(function() {
+    //   console.log("WebGazer has initialized.");
+    // }).catch(function(error:any) {
+    //   console.error("Initialization error:", error);
+    // });
+    // console.log(webgazer)
+    // webgazer.setGazeListener((data:any, elapsedTime:any) => {
+    //   if (data == null) {
+    //     console.log('sad :(')
+    //     return;
+    //   }
+    //   console.log(data.x, data.y);
+    // }).begin();
+  }
+
+
+
+  startAction(direction: string): void {
+    this.stopAction(); // Ensure no intervals are running already
+    this.moveIntervalId = window.setInterval(() => {
+      // The function you want to execute repeatedly
+      if (direction === 'left') {
+        this.moveJetLeft(-1, -1)
+      } else {
+        this.moveJetRight(-1, -1)
+      }
+    }, 100); // Adjust the interval as needed
+  }
+
+  stopAction(): void {
+    if (this.moveIntervalId !== undefined) {
+      clearInterval(this.moveIntervalId);
+      this.moveIntervalId = undefined;
+    }
   }
 
   stopTimer() {

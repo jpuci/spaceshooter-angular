@@ -137,7 +137,7 @@
   margin: 1vh -1vw; /* Margin adjusted for responsiveness */
   width: 5vw; /* Width adjusted for responsiveness */
   padding: 1vh 0vw; /* Padding adjusted for responsiveness */
-  font-size: 2vw; /* Font size adjusted for responsiveness */
+  font-size: 50px; /* Font size adjusted for responsiveness */
   cursor: pointer;
   background-color: transparent;
   color: white;
@@ -210,6 +210,18 @@ mat-icon {
     margin: 2vw 0vw; /* Adjust margin for smaller screens */
     border-radius: 2vw; /* Adjust border radius for smaller screens */
   }
+
+  //button {
+  //  margin: 10px;
+  //  width: 50px; /* Adjust the width as needed */
+  //  padding: 10px;
+  //  font-size: 25px;
+  //  cursor: pointer;
+  //  background-color: transparent;
+  //  color: white;
+  //  border: none;
+  //  border-radius: 5px;
+  //}
 
   /* Adjust bottom buttons margin for smaller screens */
   #bottom-buttons {

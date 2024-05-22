@@ -99,12 +99,18 @@
 
   <div class="row control-row" *ngIf="this.isMobile">
     <div class="col" >
-      <button  class="arrow-button" (touchstart)="startAction('left')" (touchend)="stopAction()" (touchmove)="stopAction()">
+      <button  class="arrow-button" (touchstart)="startAction('left')" (touchend)="stopAction()" (touchmove)="stopAction()"
+               (mousedown)="startAction('left')"
+               (mouseup)="stopAction()"
+               (mouseleave)="stopAction()">>
         <mat-icon class="mat-icon1">keyboard_arrow_left</mat-icon>
       </button>
     </div>
     <div class="col">
-      <button class="arrow-button" (touchstart)="startAction('right')" (touchend)="stopAction()" (touchmove)="stopAction()">
+      <button class="arrow-button" (touchstart)="startAction('right')" (touchend)="stopAction()" (touchmove)="stopAction()"
+              (mousedown)="startAction('right')"
+              (mouseup)="stopAction()"
+              (mouseleave)="stopAction()">>
         <mat-icon class="mat-icon1">keyboard_arrow_right</mat-icon>
       </button>
     </div>
