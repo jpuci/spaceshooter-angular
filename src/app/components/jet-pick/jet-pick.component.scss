@@ -18,13 +18,14 @@
   justify-content: flex-end;
   position: absolute;
 
+
 }
 
 #top-button button {
-  margin: 1vh -1vw; /* Margin adjusted for responsiveness */
+  margin: 10vh 0vw; /* Margin adjusted for responsiveness */
   width: 5vw; /* Width adjusted for responsiveness */
-  padding: 1vh 0vw; /* Padding adjusted for responsiveness */
-  font-size: 2vw; /* Font size adjusted for responsiveness */
+  padding: 0vh 0vw; /* Padding adjusted for responsiveness */
+  font-size: 3vw; /* Font size adjusted for responsiveness */
   cursor: pointer;
   background-color: transparent;
   color: white;
@@ -35,6 +36,12 @@
 #top-button button:hover {
   background-color: transparent;
 }
+
+mat-icon {
+  color: white;
+}
+
+
 
 
 .button {
@@ -104,4 +111,22 @@
 
 mat-icon{
   color: white;
+}
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
 }

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { GameService } from 'src/app/components/GameService';
+import { Router } from "@angular/router";
 import {GameComponent} from "../game/game.component";
 
 
@@ -9,7 +10,10 @@ import {GameComponent} from "../game/game.component";
   styleUrls: ['./jet-pick.component.scss']
 })
 export class JetPickComponent {
-  constructor(private playerService: GameService) { }
+  showLoadingPopup = false;
+
+  constructor(private playerService: GameService,
+              private readonly router: Router) { }
 
   ngOnInit(): void {
     const buttonIds = ['2', '3', '4'];
@@ -26,6 +30,17 @@ export class JetPickComponent {
 
 }
 
+  getIDWithDelay(id: string): void {
+    setTimeout(() => {
+      this.showLoadingPopup = true;
+      this.getID('1')
+
+      setTimeout(() => {
+        this.router.navigate(['/game']);
+      }, 5000); // Po 5 sekundach przekierowanie do /game
+
+    }, 3000); // Po 3 sekundach wyświetlenie popupu
+  }
 Check_if_Bought(){
     if(this.playerService.jet_2==1){
       this.enableButtonsById('2');

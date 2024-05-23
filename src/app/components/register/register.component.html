@@ -1,4 +1,10 @@
+<div id="top-button">
+  <button routerLink="/menu"><i class="bi bi-arrow-left"></i></button>
+</div>
+
 <div class="container">
+
+
   <h2> Rejestracja </h2>
   <form class="text-center p-5">
     <input type="text" id="defaultLoginFormUsername" class="form-control mb-4" [(ngModel)]="username" placeholder="Nazwa użytkownika" name="username">
@@ -10,4 +16,27 @@
     <button class="btn btn-primary"  type="submit" (click)="onSubmit()">Zarejestruj</button>
   </form>
   <!--<router-outlet></router-outlet>-->
+</div>
+
+
+<div *ngIf="showLoadingPopup" class="popup">
+  <div class="popup-content">
+    <p>Zaczekaj jeszcze chwilę, problemy z połączeniem sieciowym</p>
+  </div>
+</div>
+
+
+
+<div *ngIf="showErrorMessage" class="popup">
+  <div class="popup-content">
+    <p>Wystąpił problem z rejestracją, spróbuj jeszcze raz</p>
+    <button class="close-button" (click)="closeErrorMessage()">Zamknij</button>
+  </div>
+</div>
+
+<div *ngIf="showRegisteredMessage" class="popup">
+  <div class="popup-content">
+    <p>Zarejestrowano pomyślnie!</p>
+    <button class="close-button" (click)="closeRegisteredMessage()">Zamknij</button>
+  </div>
 </div>

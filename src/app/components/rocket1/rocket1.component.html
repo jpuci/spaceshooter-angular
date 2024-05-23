@@ -45,6 +45,10 @@
 
 <div id="bottom-buttons">
   <button routerLink="/leaderboard"><i class="bi bi-trophy"></i></button>
-  <button><i class="bi bi-question-octagon"></i></button>
 </div>
 
+<div *ngIf="showPopup" class="popup">
+  <div class="popup-content">
+    <p>Zaczekaj jeszcze chwilę, problemy z połączeniem sieciowym</p>
+  </div>
+</div>

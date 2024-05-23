@@ -1,8 +1,19 @@
+
+#top-button {
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: absolute;
+
+
+}
+
 #top-button button {
-  margin: 1vh -1vw; /* Margin adjusted for responsiveness */
+  margin: 10vh 0vw; /* Margin adjusted for responsiveness */
   width: 5vw; /* Width adjusted for responsiveness */
-  padding: 1vh 0vw; /* Padding adjusted for responsiveness */
-  font-size: 2vw; /* Font size adjusted for responsiveness */
+  padding: 0vh 0vw; /* Padding adjusted for responsiveness */
+  font-size: 3vw; /* Font size adjusted for responsiveness */
   cursor: pointer;
   background-color: transparent;
   color: white;
@@ -13,6 +24,12 @@
 #top-button button:hover {
   background-color: transparent;
 }
+
+mat-icon {
+  color: white;
+}
+
+
 .container {
   display: flex;
   flex-direction: column;
@@ -30,7 +47,10 @@
   max-width: 80%;
   min-width: 200px;
   margin: 0 calc(1em);
+  border: 5px solid yellow;
+  border-radius: 5px;
 }
+
 
 h2 {
   font-size: 3em;
