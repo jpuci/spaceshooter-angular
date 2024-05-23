@@ -1,12 +1,29 @@
+#top-button {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Align children to the top */
+  position: absolute;
+  top: 0; /* Position at the top */
+  left: 0; /* Position at the left */
+}
 
-button {
-  margin: 10px;
-  width: 50px; /* Adjust the width as needed */
-  padding: 10px;
-  font-size: 25px;
+#top-button button {
+  margin: 10px; /* Margin adjusted for responsiveness */
+  width: 5vw; /* Width adjusted for responsiveness */
+  padding: 10px; /* Padding adjusted for responsiveness */
+  font-size: 3e; /* Font size adjusted for responsiveness */
+  font-weight: bold; /* Make the text bold */
   cursor: pointer;
   background-color: transparent;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 1vw; /* Border radius adjusted for responsiveness */
+}
+
+#top-button button:hover {
+ // background-color: rgba(255, 255, 255, 0.1); /* Light background on hover for better visibility */
+}
+
+mat-icon {
+  color: white;
 }

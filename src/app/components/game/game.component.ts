@@ -1,10 +1,11 @@
-import {Component, OnInit, HostListener, AfterViewInit} from '@angular/core';
+import {Component, OnInit, OnDestroy,  HostListener} from '@angular/core';
 import {Rock} from "../../model/rock";
 import {Bullet} from "../../model/bullet";
 import { GameService } from 'src/app/components/GameService';
 import {Coin} from "../../model/coin";
 import { MapSelectorService } from '../map-selector/map-serv.service';
 import { Router, NavigationEnd } from '@angular/router';
+import {DefeatComponent} from "../defeat/defeat.component";
 
 declare var webgazer: any;
 
@@ -15,8 +16,7 @@ declare var webgazer: any;
 })
 
 
-
-export class GameComponent implements OnInit, AfterViewInit {
+export class GameComponent implements OnInit, OnDestroy {
   // @Input() left: number;
   // @Input() bottom: number;
   jet: any;
@@ -67,27 +67,29 @@ export class GameComponent implements OnInit, AfterViewInit {
   endMessage=false;
   score = -1;
 
+  isShooting = false;
+
   constructor(private playerService: GameService,
               public  mapService: MapSelectorService,
               private router: Router) {
     this.jetId = this.playerService.GetID();
     this.damage = this.playerService.getDamage();
     this.playerLife = this.playerService.getLife();
-    this.movement = 25 * this.playerService.getMovement();
+    this.movement = 25*this.playerService.getMovement();
     this.num_bullets = this.playerService.getBullets();
-    this.playerService.points = '';
+    this.playerService.points = 0;
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
     this.getScreenSize();
 
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        if (event.url === '/game') {
-
-          this.clearIntervals();
-        }
-      }
-    });
+    // this.router.events.subscribe(event => {
+    //   if (event instanceof NavigationEnd) {
+    //     if (event.url === '/game') {
+    //
+    //       this.clearIntervals();
+    //     }
+    //   }
+    // });
   }
 
   @HostListener('window:resize', ['$event'])
@@ -105,23 +107,18 @@ export class GameComponent implements OnInit, AfterViewInit {
       this.selectedMapPath = this.mapService.getMap();
       this.startTimer();
 
-      let diffLevel = localStorage.getItem('diffLevel');
-      if (diffLevel == null) {
-        localStorage.setItem('diffLevel', '1');
-      } else {
-        this.diffLevel = Number(diffLevel);
-      }
-
-      let ua = navigator.userAgent;
-
-
-
       if (this.screenWidth <= 800) {
         this.isMobile = true;
         this.rockWidth = 50;
         this.rockHeight = 50;
       }
     }
+
+  ngOnDestroy(): void {
+    console.log("ngOnDestroy called");
+    this.clearIntervals();
+    this.stopTimer();
+  }
 
   getFilterStyle(): string {
     switch (this.jetId) {
@@ -145,7 +142,8 @@ export class GameComponent implements OnInit, AfterViewInit {
         this.coin_number = 10;
         this.rockamount=3000;
         this.coinamount=5000;
-        this.clearIntervals();
+        // this.clearIntervals();
+        this.clearRockCoinIntervals();
         this.onStart();
       }
 
@@ -153,7 +151,8 @@ export class GameComponent implements OnInit, AfterViewInit {
         this.coin_number = 15;
         this.rockamount=2000;
         this.coinamount=4000;
-        this.clearIntervals();
+        // this.clearIntervals();
+        this.clearRockCoinIntervals();
         this.onStart();
       }
 
@@ -161,7 +160,8 @@ export class GameComponent implements OnInit, AfterViewInit {
         this.coin_number = 20;
         this.rockamount=1000;
         this.coinamount=3000;
-        this.clearIntervals();
+        // this.clearIntervals();
+        this.clearRockCoinIntervals();
         this.onStart();
       }
 
@@ -169,7 +169,8 @@ export class GameComponent implements OnInit, AfterViewInit {
       if(this.timer == 120) {
         this.rockspeed = 0.2;
         this.rockamount=500;
-        this.clearIntervals();
+        // this.clearIntervals();
+        this.clearRockCoinIntervals();
         this.onStart();
       }
 
@@ -265,6 +266,7 @@ export class GameComponent implements OnInit, AfterViewInit {
 
               this.rocksLeftTop[i].life--;
               let idx = this.bullets.findIndex(d => d.index === index);
+              console.log(idx)
               this.bullets.splice(idx, 1);
               clearInterval(moveBullet);
 
@@ -277,8 +279,6 @@ export class GameComponent implements OnInit, AfterViewInit {
                 this.playerService.Shipdestroyed();
 
 
-                document.getElementById("points")!.innerHTML =
-                  (parseInt(document.getElementById("points")!.innerHTML) + 1).toString();
               }
             }
           }
@@ -295,15 +295,15 @@ export class GameComponent implements OnInit, AfterViewInit {
         }
 
 
-         bul.left = left +33; //bullet should always be placed at the top of my jet!
-         bul.bottom = bulletbottom + 3;
+        bul.left = left +33; //bullet should always be placed at the top of my jet!
+        bul.bottom = bulletbottom + 3;
         //double bullets
 
-         if (i === 0) {
-           bul.left -= 20; // Adjust the offset for the first bullet
-         } else {
-           bul.left += 1; // Adjust the offset for the second bullet
-         }
+        if (i === 0) {
+          bul.left -= 20; // Adjust the offset for the first bullet
+        } else {
+          bul.left += 1; // Adjust the offset for the second bullet
+        }
       });
 
       this.bulletIntervalIds.push(moveBullet);
@@ -390,7 +390,7 @@ export class GameComponent implements OnInit, AfterViewInit {
 
 
   clearIntervals() {
-
+    console.log("Clearing intervals");
     clearInterval(this.bulletInterval);
     this.rockIntervalIds.forEach(id => clearInterval(id));
     this.rockIntervalIds = [];
@@ -403,13 +403,24 @@ export class GameComponent implements OnInit, AfterViewInit {
 
   }
 
+  clearRockCoinIntervals() {
+    this.rockIntervalIds.forEach(id => clearInterval(id));
+    this.rockIntervalIds = [];
+
+    this.coinInterval.forEach(id => clearInterval(id));
+    this.coinInterval = [];
+  }
+
   onStart() {
-    this.clearIntervals();
     this.start = true;
 
-    this.bulletInterval = setInterval(() => {
-      this.shootBullet();
-    }, 400);
+    if (!this.isShooting){
+      this.bulletInterval = setInterval(() => {
+        this.shootBullet();
+      }, 600);
+      this.isShooting = true;
+    }
+
 
 
 
@@ -447,7 +458,7 @@ export class GameComponent implements OnInit, AfterViewInit {
 
     let moveRocksInterval: any;
     let moveRocks = () => {
-
+      // console.log(this.rocksLeftTop.length, this.bullets.length, this.coinsLeftTop.length)
       if (this.rocksLeftTop.length !== 0) {
         for (let i = 0; i < this.rocksLeftTop.length; i++) {
           let rockTop = this.rocksLeftTop[i].top;
@@ -461,13 +472,13 @@ export class GameComponent implements OnInit, AfterViewInit {
             this.playerLife--;
 
             if (this.playerLife < 0) {
-              this.stopTimer();
+              this.clearIntervals();
               if(this.timer>=this.playerService.Getscore()){
                 this.playerService.Bestscore(this.timer);
               }
               this.playerService.saveToLocalStorage();
-              this.clearIntervals();
-              this.start = false;
+
+
               let username = localStorage.getItem('username');
               let leaderboard: any[] = JSON.parse(localStorage.getItem('leaderboard')!);
               if (leaderboard === null) {
@@ -480,9 +491,14 @@ export class GameComponent implements OnInit, AfterViewInit {
               }
               localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
 
-               this.playerService.points = document.getElementById("points")!.innerHTML;
-
-             }
+              this.playerService.points = this.timer;
+              // clearInterval(moveRocksInterval);
+              this.start = false;
+              this.playerService.refreshPage('/defeat');
+              //this.router.navigateByUrl('/defeat');
+              //  this.defeat.refreshPage();
+              // window.location.reload();
+            }
 
           }
 
@@ -525,7 +541,7 @@ export class GameComponent implements OnInit, AfterViewInit {
       this.nextCoin += 1;
 
       // Append the coin to the board
-     // this.board.appendChild(coin);
+      // this.board.appendChild(coin);
 
       if (!this.start) {
         clearInterval(generateCoins);
@@ -553,15 +569,15 @@ export class GameComponent implements OnInit, AfterViewInit {
               this.collectCoin();
               this.coinsLeftTop.splice(i, 1);
             }
-             if (coinTop >= document.getElementById("jet")!.offsetTop +20 && coinElement) {
-               this.coinsLeftTop.splice(i, 1);
-             }
+            if (coinTop >= document.getElementById("jet")!.offsetTop +20 && coinElement) {
+              this.coinsLeftTop.splice(i, 1);
+            }
 
           }
 
-            // Stop the movement of coins that collide with the jet
-            clearInterval(moveCoinsInterval);
-        //  }
+          // Stop the movement of coins that collide with the jet
+          clearInterval(moveCoinsInterval);
+          //  }
 
           // Apply the same speed to all coins
           this.coinsLeftTop[i].top += this.coinspeed;
