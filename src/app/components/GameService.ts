@@ -20,7 +20,7 @@ export class GameService {
   selectedJet: string = '1';
   coins: number = 0;
   bullets: number = 1;
-  points: string = '';
+  points: number = 0;
   bestscore: number = 0;
 
   jet_2: number = 0;
@@ -38,7 +38,7 @@ export class GameService {
     return this.coins;
   }
 
-  GetPoints(): string {
+  GetPoints(): number {
     return this.points;
   }
 
@@ -148,7 +148,7 @@ export class GameService {
       coins: 30,
       bestscore: 0,
       bullets: 1,
-      points: '',
+      points: 0,
       jet_2: 0,
       jet_3: 0,
       jet_4: 0,
@@ -170,6 +170,7 @@ export class GameService {
       speed: this.speed,
       selectedJet: this.selectedJet,
       coins: this.coins,
+      bestscore:this.bestscore,
       bullets: this.bullets,
       points: this.points,
       jet_2: this.jet_2,
@@ -201,4 +202,9 @@ export class GameService {
     this.loadFromLocalStorage();
   }
 
+
+  refreshPage(pageUrl: string): void {
+    window.location.href = pageUrl;
+  }
 }
+

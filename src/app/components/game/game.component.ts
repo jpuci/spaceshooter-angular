@@ -1,11 +1,11 @@
-import {Component, OnInit, HostListener} from '@angular/core';
+import {Component, OnInit, OnDestroy,  HostListener} from '@angular/core';
 import {Rock} from "../../model/rock";
 import {Bullet} from "../../model/bullet";
 import { GameService } from 'src/app/components/GameService';
 import {Coin} from "../../model/coin";
 import { MapSelectorService } from '../map-selector/map-serv.service';
 import { Router, NavigationEnd } from '@angular/router';
-
+import {DefeatComponent} from "../defeat/defeat.component";
 
 
 @Component({
@@ -15,7 +15,7 @@ import { Router, NavigationEnd } from '@angular/router';
 })
 
 
-export class GameComponent implements OnInit {
+export class GameComponent implements OnInit, OnDestroy {
   // @Input() left: number;
   // @Input() bottom: number;
   jet: any;
@@ -32,18 +32,17 @@ export class GameComponent implements OnInit {
   rocksLeftTop: Rock[] = [];
   coinsLeftTop: Coin[] = [];
   bullets: Bullet[] = [];
-  CollectedCoins: number = 0;
-  maps: string[] = ['assets/map1.jpg', 'assets/map2.jpg', 'assets/map3.jpg'];
+  maps: string[] = ['assets/map1.jpg', 'assets/map2.jepg', 'assets/map3.jpg'];
 
   nextBullet = 0;
   nextRock = 0;
   nextCoin: number = 0;
   timer: number = 0;
   timerInterval: any;
-  rockamount: number = 3000;
-  coinamount: number = 5000;
+  rockamount: number = 2000;
+  coinamount: number = 2000;
   coinspeed:number = 1.5 ;
-  rockspeed:number = 1;
+  rockspeed:number = 1.5;
   rockIntervalIds: any[] = [];
   coinInterval: any[] = []; // Interval for generating coins
   bulletIntervalIds: any[] = [];
@@ -62,18 +61,11 @@ export class GameComponent implements OnInit {
     this.playerLife = this.playerService.getLife();
     this.movement = 25*this.playerService.getMovement();
     this.num_bullets = this.playerService.getBullets();
-    this.playerService.points = '';
+    this.playerService.points = 0;
 
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        if (event.url === '/game') {
-
-          this.clearIntervals();
-        }
-      }
-    });
 
   }
+
 
   getFilterStyle(): string {
     switch (this.jetId) {
@@ -88,50 +80,47 @@ export class GameComponent implements OnInit {
       default:
         return '';
     }
-    }
+  }
 
   ngOnInit(): void {
     this.jet = document.getElementById("jet");
     this.board = document.getElementById("board");
+    this.clearIntervals();
     this.onStart();
 
     this.selectedMapPath = this.mapService.getMap();
     this.startTimer();
   }
 
-
+  ngOnDestroy(): void {
+    console.log("ngOnDestroy called");
+    this.clearIntervals();
+    this.stopTimer();
+  }
 
   startTimer() {
     // Start the timer interval
     this.timerInterval = setInterval(() => {
-        if(this.timer == 60){
-          this.coin_number = 10;
-          this.rockamount=3000;
-          this.coinamount=5000;
-          this.onStart();
-        }
 
-        if(this.timer == 120){
-          this.coin_number = 15;
-          this.rockamount=2000;
-          this.coinamount=4000;
-          this.onStart();
-        }
+      if(this.timer == 30){
 
-        if(this.timer == 180){
-          this.coin_number = 20;
-          this.rockamount=1000;
-          this.coinamount=3000;
-          this.onStart();
-        }
+        this.rockspeed=2;
+      }
+
+      if(this.timer == 60){
+
+        this.rockamount=1000;
+        this.clearIntervals();
+        this.onStart();
+      }
 
 
-        if(this.timer == 200) {
-          this.rockspeed = 0.2;
-          this.rockamount=500;
-          this.onStart();
-        }
-
+      if(this.timer == 90) {
+        // this.rockspeed = 1;
+        this.rockamount=650;
+        this.clearIntervals();
+        this.onStart();
+      }
 
       this.timer++; // Increment the timer by 1 second
     }, 1000); // Update the timer every second
@@ -197,8 +186,6 @@ export class GameComponent implements OnInit {
                 this.playerService.Shipdestroyed();
 
 
-                document.getElementById("points")!.innerHTML =
-                  (parseInt(document.getElementById("points")!.innerHTML) + 1).toString();
               }
             }
           }
@@ -215,15 +202,15 @@ export class GameComponent implements OnInit {
         }
 
 
-         bul.left = left +33; //bullet should always be placed at the top of my jet!
-         bul.bottom = bulletbottom + 3;
+        bul.left = left +33; //bullet should always be placed at the top of my jet!
+        bul.bottom = bulletbottom + 3;
         //double bullets
 
-         if (i === 0) {
-           bul.left -= 20; // Adjust the offset for the first bullet
-         } else {
-           bul.left += 1; // Adjust the offset for the second bullet
-         }
+        if (i === 0) {
+          bul.left -= 20; // Adjust the offset for the first bullet
+        } else {
+          bul.left += 1; // Adjust the offset for the second bullet
+        }
       });
 
 
@@ -286,21 +273,21 @@ export class GameComponent implements OnInit {
 
 
   clearIntervals() {
-
-   clearInterval(this.bulletInterval);
+    console.log("Clearing intervals");
+    clearInterval(this.bulletInterval);
     this.rockIntervalIds.forEach(id => clearInterval(id));
     this.rockIntervalIds = [];
 
     this.coinInterval.forEach(id => clearInterval(id));
     this.coinInterval = [];
 
-    //this.bulletIntervalIds.forEach(id => clearInterval(id));
-   // this.bulletIntervalIds = [];
+    this.bulletIntervalIds.forEach(id => clearInterval(id));
+    this.bulletIntervalIds = [];
 
   }
 
+
   onStart() {
-    //this.clearIntervals();
     this.start = true;
 
     this.bulletInterval = setInterval(() => {
@@ -333,7 +320,7 @@ export class GameComponent implements OnInit {
 
 
       if (!this.start) {
-       // clearInterval(generateRocks);
+        clearInterval(generateRocks);
       }
     }, this.rockamount);
 
@@ -357,13 +344,13 @@ export class GameComponent implements OnInit {
             this.playerLife--;
 
             if (this.playerLife < 0) {
-              this.stopTimer();
+              this.clearIntervals();
               if(this.timer>=this.playerService.Getscore()){
                 this.playerService.Bestscore(this.timer);
               }
               this.playerService.saveToLocalStorage();
-              //this.clearIntervals();
-              this.start = false;
+
+
               let username = localStorage.getItem('username');
               let leaderboard: any[] = JSON.parse(localStorage.getItem('leaderboard')!);
               if (leaderboard === null) {
@@ -377,9 +364,14 @@ export class GameComponent implements OnInit {
               localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
               console.log(leaderboard);
 
-               this.playerService.points = document.getElementById("points")!.innerHTML;
-
-             }
+              this.playerService.points = this.timer;
+              // clearInterval(moveRocksInterval);
+              this.start = false;
+              this.playerService.refreshPage('/defeat');
+              //this.router.navigateByUrl('/defeat');
+              //  this.defeat.refreshPage();
+              // window.location.reload();
+            }
 
           }
 
@@ -422,10 +414,10 @@ export class GameComponent implements OnInit {
       this.nextCoin += 1;
 
       // Append the coin to the board
-     // this.board.appendChild(coin);
+      // this.board.appendChild(coin);
 
       if (!this.start) {
-       // clearInterval(generateCoins);
+        clearInterval(generateCoins);
       }
     }, this.coinamount);
 
@@ -450,15 +442,15 @@ export class GameComponent implements OnInit {
               this.collectCoin();
               this.coinsLeftTop.splice(i, 1);
             }
-             if (coinTop >= document.getElementById("jet")!.offsetTop +20 && coinElement) {
-               this.coinsLeftTop.splice(i, 1);
-             }
+            if (coinTop >= document.getElementById("jet")!.offsetTop +20 && coinElement) {
+              this.coinsLeftTop.splice(i, 1);
+            }
 
           }
 
-            // Stop the movement of coins that collide with the jet
-            clearInterval(moveCoinsInterval);
-        //  }
+          // Stop the movement of coins that collide with the jet
+          clearInterval(moveCoinsInterval);
+          //  }
 
           // Apply the same speed to all coins
           this.coinsLeftTop[i].top += this.coinspeed;
