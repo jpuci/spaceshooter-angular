@@ -52,6 +52,8 @@ export class GameComponent implements OnInit, AfterViewInit {
   playerLife: number = 3; // Initialize player life with 3
   bulletInterval: any; // Deklaruj identyfikator interwału
 
+  lastBullets : any[] = [];
+
   selectedMapPath: number = this.mapService.getMap();
 
 
@@ -92,7 +94,6 @@ export class GameComponent implements OnInit, AfterViewInit {
   getScreenSize(event?: any) {
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
-    console.log(this.screenHeight, this.screenWidth);
   }
 
     ngOnInit(): void {
@@ -264,9 +265,11 @@ export class GameComponent implements OnInit, AfterViewInit {
 
               this.rocksLeftTop[i].life--;
               let idx = this.bullets.findIndex(d => d.index === index);
-              console.log(idx);
               this.bullets.splice(idx, 1);
               clearInterval(moveBullet);
+
+
+
 
               // Check if the life of the rock is greater than 0
               if (this.rocksLeftTop[i].life <= 0) {
@@ -304,7 +307,6 @@ export class GameComponent implements OnInit, AfterViewInit {
       });
 
       this.bulletIntervalIds.push(moveBullet);
-      console.log(this.bulletIntervalIds.length);
 
 
     }
@@ -324,7 +326,7 @@ export class GameComponent implements OnInit, AfterViewInit {
     this.jet = document.getElementById("jet");
     this.board = document.getElementById("board");
     let left = parseInt(window.getComputedStyle(this.jet).getPropertyValue("left"));
-    let speed = 20; // ship speed
+    let speed = 15; // ship speed
 
     if (event.key == "ArrowLeft") {
       this.moveJetLeft(left, speed);
@@ -339,7 +341,7 @@ export class GameComponent implements OnInit, AfterViewInit {
 
     if (currentLeft === -1){
       left = parseInt(window.getComputedStyle(this.jet).getPropertyValue("left"));
-      jetSpeed = 20; // ship speed
+      jetSpeed = 15; // ship speed
     } else {
       left = currentLeft;
       jetSpeed = speed;
@@ -355,7 +357,7 @@ export class GameComponent implements OnInit, AfterViewInit {
 
     if (currentLeft === -1){
       left = parseInt(window.getComputedStyle(this.jet).getPropertyValue("left"));
-      jetSpeed = 20; // ship speed
+      jetSpeed = 15; // ship speed
     } else {
       left = currentLeft;
       jetSpeed = speed;
@@ -477,7 +479,6 @@ export class GameComponent implements OnInit, AfterViewInit {
                 leaderboard.push({username: 'Noname', score: this.playerService.Getscore()})
               }
               localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-              console.log(leaderboard);
 
                this.playerService.points = document.getElementById("points")!.innerHTML;
 
