@@ -50,6 +50,7 @@ export class GameComponent implements OnInit, OnDestroy {
   bulletInterval: any; // Deklaruj identyfikator interwału
 
   selectedMapPath: number = this.mapService.getMap();
+  isShooting = false;
 
 
 
@@ -110,7 +111,7 @@ export class GameComponent implements OnInit, OnDestroy {
       if(this.timer == 60){
 
         this.rockamount=1000;
-        this.clearIntervals();
+        this.clearRockCoinIntervals();
         this.onStart();
       }
 
@@ -118,7 +119,7 @@ export class GameComponent implements OnInit, OnDestroy {
       if(this.timer == 90) {
         // this.rockspeed = 1;
         this.rockamount=650;
-        this.clearIntervals();
+        this.clearRockCoinIntervals();
         this.onStart();
       }
 
@@ -213,6 +214,8 @@ export class GameComponent implements OnInit, OnDestroy {
         }
       });
 
+      this.bulletIntervalIds.push(moveBullet);
+
 
     }
 
@@ -286,13 +289,25 @@ export class GameComponent implements OnInit, OnDestroy {
 
   }
 
+  clearRockCoinIntervals() {
+    this.rockIntervalIds.forEach(id => clearInterval(id));
+    this.rockIntervalIds = [];
+
+    this.coinInterval.forEach(id => clearInterval(id));
+    this.coinInterval = [];
+  }
+
 
   onStart() {
     this.start = true;
 
-    this.bulletInterval = setInterval(() => {
-      this.shootBullet();
-    }, 400);
+    if (!this.isShooting){
+      this.bulletInterval = setInterval(() => {
+        this.shootBullet();
+      }, 400);
+      this.isShooting = true;
+    }
+
 
 
 
