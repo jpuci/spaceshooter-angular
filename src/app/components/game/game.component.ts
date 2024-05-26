@@ -35,7 +35,7 @@ export class GameComponent implements OnInit, OnDestroy {
   rocksLeftTop: Rock[] = [];
   coinsLeftTop: Coin[] = [];
   bullets: Bullet[] = [];
-  maps: string[] = ['assets/map1.jpg', 'assets/map2.jepg', 'assets/map3.jpg'];
+  maps: string[] = ['assets/map1.jpg', 'assets/map2.jpg', 'assets/map3.jpg'];
 
   nextBullet = 0;
   nextRock = 0;
