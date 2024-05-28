@@ -23,7 +23,7 @@ export class GameComponent implements OnInit, OnDestroy {
   start: boolean = false;
   damage: number = 0;
   movement: number = 0;
-  num_bullets:number = 0;
+  num_bullets: number = 0;
   coin_number: number = 5;
   jetId: string = "";
 
@@ -41,26 +41,24 @@ export class GameComponent implements OnInit, OnDestroy {
   timerInterval: any;
   rockamount: number = 2000;
   coinamount: number = 2000;
-  coinspeed:number = 1.5 ;
-  rockspeed:number = 1.5;
+  coinspeed: number = 1.5;
+  rockspeed: number = 1.5;
   rockIntervalIds: any[] = [];
-  coinInterval: any[] = []; // Interval for generating coins
+  coinIntervalIds: any[] = []; // Interval for generating coins
   bulletIntervalIds: any[] = [];
   playerLife: number = 3; // Initialize player life with 3
   bulletInterval: any; // Deklaruj identyfikator interwału
 
   selectedMapPath: number = this.mapService.getMap();
-  isShooting = false;
-
 
 
   constructor(private playerService: GameService,
-              public  mapService: MapSelectorService,
+              public mapService: MapSelectorService,
               private router: Router) {
     this.jetId = this.playerService.GetID();
     this.damage = this.playerService.getDamage();
     this.playerLife = this.playerService.getLife();
-    this.movement = 25*this.playerService.getMovement();
+    this.movement = 25 * this.playerService.getMovement();
     this.num_bullets = this.playerService.getBullets();
     this.playerService.points = 0;
 
@@ -86,8 +84,12 @@ export class GameComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.jet = document.getElementById("jet");
     this.board = document.getElementById("board");
-    this.clearIntervals();
-    this.onStart();
+    this.bulletInterval = setInterval(() => {
+      this.shootBullet();
+    }, 400);
+    this.updateRockGenerationInterval();
+    this.updateCoinGenerationInterval();
+
 
     this.selectedMapPath = this.mapService.getMap();
     this.startTimer();
@@ -95,7 +97,6 @@ export class GameComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     console.log("ngOnDestroy called");
-    this.clearIntervals();
     this.stopTimer();
   }
 
@@ -103,216 +104,41 @@ export class GameComponent implements OnInit, OnDestroy {
     // Start the timer interval
     this.timerInterval = setInterval(() => {
 
-      if(this.timer == 30){
-
-        this.rockspeed=2;
+      // Increase speed and decrease time between rock generation every 30 seconds
+      if (this.timer == 30) {
+        this.rockspeed += 0.5; // Increase rock speed by 0.5 units
+        this.updateRockGenerationInterval();
       }
 
-      if(this.timer == 60){
+      if (this.timer == 60) {
+        this.rockspeed -= 0.5;
+        this.rockamount -= 500; // Increase rock speed by 0.5 units
+        this.updateRockGenerationInterval();
+      }
 
-        this.rockamount=1000;
-        this.clearRockCoinIntervals();
-        this.onStart();
+      if (this.timer == 80) {
+        this.rockamount -= 500; // Increase rock speed by 0.5 units
+        this.updateRockGenerationInterval();
+      }
+
+      if (this.timer == 100) {
+        this.rockamount -= 200; // Increase rock speed by 0.5 units
+        this.updateRockGenerationInterval();
       }
 
 
-      if(this.timer == 90) {
-        // this.rockspeed = 1;
-        this.rockamount=650;
-        this.clearRockCoinIntervals();
-        this.onStart();
-      }
+      // Increment the timer by 1 second
+      this.timer++;
 
-      this.timer++; // Increment the timer by 1 second
     }, 1000); // Update the timer every second
-  }
 
-  stopTimer() {
-    // Stop the timer interval
-    clearInterval(this.timerInterval);
-  }
-
-
-  shootBullet() {
-    this.jet = document.getElementById("jet");
-    this.board = document.getElementById("board");
-    let left = parseInt(window.getComputedStyle(this.jet).getPropertyValue("left"));
-
-
-
-
-    let numberOfBullets = this.num_bullets; // Adjust the number of bullets as needed
-
-    for (let i = 0; i < numberOfBullets; i++) {
-
-
-      let bul = {
-        bottom: 90, left:document.getElementById("jet")!.clientLeft
-        , width: 20, height: 20, index: this.nextBullet
-      };
-
-      // Adjust the initial left position
-      let index = this.nextBullet;
-      this.nextBullet += 1;
-      this.bullets.push(bul);
-
-
-      let moveBullet = setInterval(() => {
-        // let rocks = document.getElementsByClassName("rocks");
-        for (let rock of this.rocksLeftTop) {
-          let i = this.rocksLeftTop.findIndex(d => d.index === rock.index);
-          let rock2 = this.rocksLeftTop[i];
-          if (rock2 != undefined) {
-            let rockbound = document.getElementById("rock" + rock.index)!.getBoundingClientRect();
-            let bulletbound = document.getElementById("bullet" + index)!.getBoundingClientRect();
-
-            //Condition to check whether the rock/alien and the bullet are at the same position!
-            //If so,then we have to destroy that rock
-
-            if (
-              bulletbound.left >= rockbound.left &&
-              bulletbound.right <= rockbound.right &&
-              bulletbound.top <= rockbound.top &&
-              bulletbound.bottom <= rockbound.bottom
-            ) {
-
-              this.rocksLeftTop[i].life--;
-              let idx = this.bullets.findIndex(d => d.index === index);
-              this.bullets.splice(idx, 1);
-              clearInterval(moveBullet);
-
-              // Check if the life of the rock is greater than 0
-              if (this.rocksLeftTop[i].life <= 0) {
-                this.rocksLeftTop.splice(i, 1);
-                this.playerService.Shipdestroyed();
-
-
-              }
-            }
-          }
-        }
-        let bulletbound = document.getElementById("bullet" + index)!.getBoundingClientRect();
-        let bullettop = bulletbound.top;
-        let bulletbottom = bul.bottom;
-
-        //Stops the bullet from moving outside the gamebox
-        if (bullettop <= document.getElementById("board")!.clientTop) {
-          clearInterval(moveBullet);
-          let idx = this.bullets.findIndex(d => d.index === index);
-          this.bullets.splice(idx, 1);
-        }
-
-
-        bul.left = left +33; //bullet should always be placed at the top of my jet!
-        bul.bottom = bulletbottom + 3;
-        //double bullets
-
-        if (i === 0) {
-          bul.left -= 20; // Adjust the offset for the first bullet
-        } else {
-          bul.left += 1; // Adjust the offset for the second bullet
-        }
-      });
-
-      this.bulletIntervalIds.push(moveBullet);
-
-
-    }
-
-  }
-
-  collectCoin() {
-    this.playerService.addCoin();
-  }
-
-  getCoins() : number {
-    return this.playerService.coins;
-  }
-
-  @HostListener('document:keydown', ['$event'])
-  handleKeyboardEvent(event: KeyboardEvent) {
-    this.jet = document.getElementById("jet");
-    this.board = document.getElementById("board");
-    let left = parseInt(window.getComputedStyle(this.jet).getPropertyValue("left"));
-    let speed = 20; // ship speed
-
-    if (event.key == "ArrowLeft") {
-      this.moveJetLeft(left, speed);
-    } else if (event.key == "ArrowRight") {
-      this.moveJetRight(left, speed);
-    }
-  }
-
-  moveJetLeft(currentLeft: number, speed: number) {
-    const targetLeft = Math.max(currentLeft - speed, 0); // Ensure jet stays within the board
-    this.animateJetMovement(currentLeft, targetLeft);
-  }
-
-  moveJetRight(currentLeft: number, speed: number) {
-    const boardWidth = this.board.clientWidth;
-    const jetWidth = this.jet.clientWidth;
-    const targetLeft = Math.min(currentLeft + speed, boardWidth - jetWidth); // Ensure jet stays within the board
-    this.animateJetMovement(currentLeft, targetLeft);
-  }
-
-  animateJetMovement(startLeft: number, targetLeft: number) {
-    const duration = 125 - this.movement; // Adjust animation duration as needed
-    const startTime = performance.now();
-
-    const animate = (currentTime: number) => {
-      const elapsedTime = currentTime - startTime;
-      const percentage = Math.min(elapsedTime / duration, 1);
-
-      const newLeft = startLeft + (targetLeft - startLeft) * percentage;
-      this.jet.style.left = newLeft + 'px';
-
-      if (percentage < 1) {
-        requestAnimationFrame(animate);
-      }
-    };
-
-    requestAnimationFrame(animate);
+    // Start initial rock generation interval
+    //this.startRockGenerationInterval();
   }
 
 
-  clearIntervals() {
-    console.log("Clearing intervals");
-    clearInterval(this.bulletInterval);
-    this.rockIntervalIds.forEach(id => clearInterval(id));
-    this.rockIntervalIds = [];
-
-    this.coinInterval.forEach(id => clearInterval(id));
-    this.coinInterval = [];
-
-    this.bulletIntervalIds.forEach(id => clearInterval(id));
-    this.bulletIntervalIds = [];
-
-  }
-
-  clearRockCoinIntervals() {
-    this.rockIntervalIds.forEach(id => clearInterval(id));
-    this.rockIntervalIds = [];
-
-    this.coinInterval.forEach(id => clearInterval(id));
-    this.coinInterval = [];
-  }
-
-
-  onStart() {
-    this.start = true;
-
-    if (!this.isShooting){
-      this.bulletInterval = setInterval(() => {
-        this.shootBullet();
-      }, 400);
-      this.isShooting = true;
-    }
-
-
-
-
-
-
+  startRockGenerationInterval() {
+    // Start interval for generating rocks with updated rockamount
     let generateRocks = setInterval(() => {
       this.board = document.getElementById("board");
       this.jet = document.getElementById("jet");
@@ -334,14 +160,9 @@ export class GameComponent implements OnInit, OnDestroy {
       this.nextRock += 1;
 
 
-      if (!this.start) {
-        clearInterval(generateRocks);
-      }
     }, this.rockamount);
+    this.rockIntervalIds.push(generateRocks);
 
-
-
-    this.rockIntervalIds.push(generateRocks)
 
     let moveRocksInterval: any;
     let moveRocks = () => {
@@ -359,8 +180,8 @@ export class GameComponent implements OnInit, OnDestroy {
             this.playerLife--;
 
             if (this.playerLife < 0) {
-              this.clearIntervals();
-              if(this.timer>=this.playerService.Getscore()){
+              // this.clearIntervals();
+              if (this.timer >= this.playerService.Getscore()) {
                 this.playerService.Bestscore(this.timer);
               }
               this.playerService.saveToLocalStorage();
@@ -411,7 +232,11 @@ export class GameComponent implements OnInit, OnDestroy {
     moveRocksInterval = setInterval(moveRocks, this.rockamount);
 
 
+  }
 
+
+
+  startCoinGenerationInterval() {
     let generateCoins = setInterval(() => {
       this.board = document.getElementById("board");
       this.jet = document.getElementById("jet");
@@ -431,12 +256,10 @@ export class GameComponent implements OnInit, OnDestroy {
       // Append the coin to the board
       // this.board.appendChild(coin);
 
-      if (!this.start) {
-        clearInterval(generateCoins);
-      }
+
     }, this.coinamount);
 
-    this.coinInterval.push(generateCoins);
+    this.coinIntervalIds.push(generateCoins);
 
     let moveCoins = () => {
       if (this.coinsLeftTop.length !== 0) {
@@ -480,6 +303,182 @@ export class GameComponent implements OnInit, OnDestroy {
     let moveCoinsInterval = setInterval(moveCoins, this.coinamount);
 
 
+  }
+
+
+
+  clearRockGenerationInterval() {
+    // Clear existing intervals for generating rocks
+    this.rockIntervalIds.forEach(id => clearInterval(id));
+    this.rockIntervalIds = [];
+  }
+
+  clearCoinGenerationInterval() {
+    // Clear existing intervals for generating rocks
+    this.coinIntervalIds.forEach(id => clearInterval(id));
+    this.coinIntervalIds = [];
+  }
+
+
+
+  updateRockGenerationInterval() {
+    // Update the interval for generating rocks
+    this.clearRockGenerationInterval();
+    this.startRockGenerationInterval();
+  }
+
+  updateCoinGenerationInterval() {
+    // Update the interval for generating rocks
+    this.clearCoinGenerationInterval();
+    this.startCoinGenerationInterval();
+  }
+
+
+
+  stopTimer() {
+    // Stop the timer interval
+    clearInterval(this.timerInterval);
+  }
+
+
+
+  shootBullet() {
+    this.jet = document.getElementById("jet");
+    this.board = document.getElementById("board");
+    let left = parseInt(window.getComputedStyle(this.jet).getPropertyValue("left"));
+
+
+    let numberOfBullets = this.num_bullets; // Adjust the number of bullets as needed
+
+    for (let i = 0; i < numberOfBullets; i++) {
+
+
+      let bul = {
+        bottom: 90, left: document.getElementById("jet")!.clientLeft
+        , width: 20, height: 20, index: this.nextBullet
+      };
+
+      // Adjust the initial left position
+      let index = this.nextBullet;
+      this.nextBullet += 1;
+      this.bullets.push(bul);
+
+
+      let moveBullet = setInterval(() => {
+        let rocks = document.getElementsByClassName("rocks");
+        for (let rock of this.rocksLeftTop) {
+          let i = this.rocksLeftTop.findIndex(d => d.index === rock.index);
+          let rock2 = this.rocksLeftTop[i];
+          if (rock2 != undefined) {
+            let rockbound = document.getElementById("rock" + rock.index)!.getBoundingClientRect();
+            let bulletbound = document.getElementById("bullet" + index)!.getBoundingClientRect();
+
+            //Condition to check whether the rock/alien and the bullet are at the same position!
+            //If so,then we have to destroy that rock
+
+            if (
+              bulletbound.left >= rockbound.left &&
+              bulletbound.right <= rockbound.right &&
+              bulletbound.top <= rockbound.top &&
+              bulletbound.bottom <= rockbound.bottom
+            ) {
+
+              this.rocksLeftTop[i].life--;
+              let idx = this.bullets.findIndex(d => d.index === index);
+              this.bullets.splice(idx, 1);
+              clearInterval(moveBullet);
+
+              // Check if the life of the rock is greater than 0
+              if (this.rocksLeftTop[i].life <= 0) {
+                this.rocksLeftTop.splice(i, 1);
+                this.bulletIntervalIds.forEach(id => clearInterval(id));
+                this.bulletIntervalIds = [];
+                this.playerService.Shipdestroyed();
+
+
+              }
+            }
+          }
+        }
+        let bulletbound = document.getElementById("bullet" + index)!.getBoundingClientRect();
+        let bullettop = bulletbound.top;
+        let bulletbottom = bul.bottom;
+
+        //Stops the bullet from moving outside the gamebox
+        if (bullettop <= document.getElementById("board")!.clientTop) {
+          clearInterval(moveBullet);
+          let idx = this.bullets.findIndex(d => d.index === index);
+          this.bullets.splice(idx, 1);
+        }
+
+
+        bul.left = left + 33; //bullet should always be placed at the top of my jet!
+        bul.bottom = bulletbottom + 3;
+        //double bullets
+
+        if (i === 0) {
+          bul.left -= 20; // Adjust the offset for the first bullet
+        } else {
+          bul.left += 1; // Adjust the offset for the second bullet
+        }
+      });
+
+
+    }
+
+  }
+
+  collectCoin() {
+    this.playerService.addCoin();
+  }
+
+  getCoins(): number {
+    return this.playerService.coins;
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    this.jet = document.getElementById("jet");
+    this.board = document.getElementById("board");
+    let left = parseInt(window.getComputedStyle(this.jet).getPropertyValue("left"));
+    let speed = 20; // ship speed
+
+    if (event.key == "ArrowLeft") {
+      this.moveJetLeft(left, speed);
+    } else if (event.key == "ArrowRight") {
+      this.moveJetRight(left, speed);
+    }
+  }
+
+  moveJetLeft(currentLeft: number, speed: number) {
+    const targetLeft = Math.max(currentLeft - speed, 0); // Ensure jet stays within the board
+    this.animateJetMovement(currentLeft, targetLeft);
+  }
+
+  moveJetRight(currentLeft: number, speed: number) {
+    const boardWidth = this.board.clientWidth;
+    const jetWidth = this.jet.clientWidth;
+    const targetLeft = Math.min(currentLeft + speed, boardWidth - jetWidth); // Ensure jet stays within the board
+    this.animateJetMovement(currentLeft, targetLeft);
+  }
+
+  animateJetMovement(startLeft: number, targetLeft: number) {
+    const duration = 125 - this.movement; // Adjust animation duration as needed
+    const startTime = performance.now();
+
+    const animate = (currentTime: number) => {
+      const elapsedTime = currentTime - startTime;
+      const percentage = Math.min(elapsedTime / duration, 1);
+
+      const newLeft = startLeft + (targetLeft - startLeft) * percentage;
+      this.jet.style.left = newLeft + 'px';
+
+      if (percentage < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+
+    requestAnimationFrame(animate);
   }
 
   protected readonly MapSelectorService = MapSelectorService;
